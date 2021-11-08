@@ -117,7 +117,7 @@ uint32_t robotraconteur_test_lfsr_next_cdouble(uint32_t lfsr, double* r_val_out,
 
 uint32_t robotraconteur_test_lfsr_next_char(uint32_t lfsr, char* val_out)
 {
-    const char* chars = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+    const char chars[] = " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
     uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
     uint32_t ind = lfsr2 % sizeof(chars);
     *val_out = chars[ind];

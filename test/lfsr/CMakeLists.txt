@@ -4,3 +4,6 @@ target_include_directories(robotraconteur_test_lfsr PUBLIC ${CMAKE_CURRENT_SOURC
 if(WIN32)
 	target_compile_definitions(robotraconteur_test_lfsr PRIVATE ROBOTRACONTEUR_TEST_LFSR_EXPORTS INTERFACE ROBOTRACONTEUR_TEST_LFSR_IMPORTS)
 endif()
+
+add_executable(robotraconteur_test_lfsr_print src/robotraconteur_test_lfsr_print.cpp)
+target_link_libraries(robotraconteur_test_lfsr_print robotraconteur_test_lfsr RobotRaconteurCore)
