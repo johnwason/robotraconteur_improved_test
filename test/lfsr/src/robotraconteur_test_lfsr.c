@@ -2,6 +2,13 @@
 
 uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32_t key_len)
 {
+
+    // Run the LFSR a few times on the seed to shuffle
+    for (size_t i=0; i<128; i++)
+    {
+        seed = robotraconteur_test_lfsr_next(seed);
+    }
+
     size_t i = 0;
     uint32_t hash = robotraconteur_test_lfsr_next(seed);
     while (i != key_len) {
@@ -12,6 +19,13 @@ uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32
     hash += hash << 3;
     hash ^= hash >> 11;
     hash += hash << 15;
+
+    // Shuffle again
+    for (size_t i = 0; i<128; i++)
+    {
+        hash = robotraconteur_test_lfsr_next(hash);
+    }
+
     return robotraconteur_test_lfsr_next(hash);
 }
 
