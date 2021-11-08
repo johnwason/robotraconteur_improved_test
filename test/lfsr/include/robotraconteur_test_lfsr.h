@@ -61,10 +61,10 @@ extern "C" {
      * 
      * https://en.wikipedia.org/wiki/Jenkins_hash_function
      * 
-     * The initial hash for the one_at_a_time algorthim is the seed after one 
-     * lfsr_next
+     * The initial hash for the one_at_a_time algorthim is the seed after 
+     * lfsr_next 128 times
      * 
-     * The output hash is passed through lfsr_next once
+     * The output hash is passed through lfsr_next 128 times
      * 
      * @param seed Initial seed
      * @param key String key to hash
