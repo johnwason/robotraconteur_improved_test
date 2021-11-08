@@ -33,6 +33,7 @@
 #define ROBOTRACONTEUR_TEST_LFSR_API
 #endif
 
+#include <stdlib.h>
 #include <stdint.h>
 
 /**
