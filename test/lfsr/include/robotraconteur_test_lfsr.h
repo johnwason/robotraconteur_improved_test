@@ -21,6 +21,8 @@
  * limitations under the License.
  */
 
+#pragma once
+
 #ifdef _WIN32
 #ifdef ROBOTRACONTEUR_TEST_LFSR_EXPORTS
 #define ROBOTRACONTEUR_TEST_LFSR_API __declspec(dllexport)

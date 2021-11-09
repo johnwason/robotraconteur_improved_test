@@ -1,3 +1,5 @@
+#pragma once
+
 #include "robotraconteur_test_lfsr.h"
 
 #ifdef __cplusplus
