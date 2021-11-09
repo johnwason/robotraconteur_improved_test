@@ -121,6 +121,13 @@ namespace test
             return ret;
         }
 
+        size_t NextLen(size_t max_len)
+        {
+            size_t len;
+            lfsr = robotraconteur_test_lfsr_next_len(lfsr, max_len, &len);
+            return len;
+        }
+
         RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > NextInt8Array(size_t len)
         {
             RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > ret = RobotRaconteur::AllocateRRArray<int8_t>(len);
@@ -253,6 +260,161 @@ namespace test
 
         std::string NextString(size_t len)
         {
+            std::string ret;
+            ret.resize(len,' ');
+            for (size_t i = 0; i<len; i++)
+            {
+                ret[i] = NextChar();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > NextInt8ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > ret = RobotRaconteur::AllocateRRArray<int8_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextInt8();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > NextUInt8ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint8_t> > ret = RobotRaconteur::AllocateRRArray<uint8_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextUInt8();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t> > NextInt16ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int16_t> > ret = RobotRaconteur::AllocateRRArray<int16_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextInt16();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t> > NextUInt16ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint16_t> > ret = RobotRaconteur::AllocateRRArray<uint16_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextUInt16();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > NextInt32ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int32_t> > ret = RobotRaconteur::AllocateRRArray<int32_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextInt32();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > NextUInt32ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint32_t> > ret = RobotRaconteur::AllocateRRArray<uint32_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextUInt32();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t> > NextInt64ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int64_t> > ret = RobotRaconteur::AllocateRRArray<int64_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextInt64();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t> > NextUInt64ArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<uint64_t> > ret = RobotRaconteur::AllocateRRArray<uint64_t>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextUInt64();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float> > NextFloatArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<float> > ret = RobotRaconteur::AllocateRRArray<float>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextFloat();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > NextDoubleArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<double> > ret = RobotRaconteur::AllocateRRArray<double>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextDouble();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > NextBoolArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::rr_bool> > ret = RobotRaconteur::AllocateRRArray<RobotRaconteur::rr_bool>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextBool();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat> > NextCFloatArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cfloat> > ret = RobotRaconteur::AllocateRRArray<RobotRaconteur::cfloat>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextCFloat();
+            }
+            return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > NextCDoubleArrayVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
+            RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<RobotRaconteur::cdouble> > ret = RobotRaconteur::AllocateRRArray<RobotRaconteur::cdouble>(len);
+            for (size_t i = 0; i<len; i++)
+            {
+                (*ret)[i] = NextCDouble();
+            }
+            return ret;
+        }
+
+        std::string NextStringVarLen(size_t max_len)
+        {
+            size_t len = NextLen(max_len);
             std::string ret;
             ret.resize(len,' ');
             for (size_t i = 0; i<len; i++)

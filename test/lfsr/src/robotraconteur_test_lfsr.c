@@ -137,3 +137,17 @@ uint32_t robotraconteur_test_lfsr_next_char(uint32_t lfsr, char* val_out)
     *val_out = chars[ind];
     return lfsr2;
 }
+
+uint32_t robotraconteur_test_lfsr_next_len(uint32_t lfsr, size_t max_len, size_t* len_out)
+{
+    uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
+    if (max_len < 32)
+    {
+        *len_out = ((size_t)lfsr2) % max_len;
+    }
+    else
+    {
+        *len_out = 8 + ((size_t)lfsr2) % (max_len - 8);
+    }
+    return lfsr2;
+}

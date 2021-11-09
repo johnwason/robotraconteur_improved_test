@@ -75,4 +75,19 @@ int main(int argc, char* argv[])
     print_array_bool(seqgen.NextBoolArray(count));
     print_array_complex(seqgen.NextCFloatArray(count));
     print_array_complex(seqgen.NextCDoubleArray(count));
+    std::cout << std::endl;
+    print_array(seqgen.NextInt8ArrayVarLen(count));
+    print_array(seqgen.NextUInt8ArrayVarLen(count));
+    print_array(seqgen.NextInt16ArrayVarLen(count));
+    print_array(seqgen.NextUInt16ArrayVarLen(count));
+    print_array(seqgen.NextInt32ArrayVarLen(count));
+    print_array(seqgen.NextUInt32ArrayVarLen(count));
+    print_array(seqgen.NextInt64ArrayVarLen(count));
+    print_array(seqgen.NextUInt64ArrayVarLen(count));
+    print_array(seqgen.NextFloatArrayVarLen(count));
+    print_array(seqgen.NextDoubleArrayVarLen(count));
+    std::cout << seqgen.NextStringVarLen(count) << std::endl;
+    print_array_bool(seqgen.NextBoolArrayVarLen(count));
+    print_array_complex(seqgen.NextCFloatArrayVarLen(count));
+    print_array_complex(seqgen.NextCDoubleArrayVarLen(count));
 }
