@@ -36,7 +36,15 @@ void print_array_complex(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > a)
     size_t len = a->size();
     for (size_t i=0; i<len; i++)
     {
-        std::cout << a->at(i).real << "+" << a->at(i).imag << "i";
+        T v = a->at(i);
+        if (v.imag < 0)
+        {
+            std::cout << v.real << v.imag << "i";
+        }
+        else
+        {
+            std::cout << v.real << "+" << v.imag << "i";
+        }
         if (i+1 < len)
         {
             std::cout << " ";
