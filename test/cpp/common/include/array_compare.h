@@ -54,9 +54,7 @@ class rr_array_near_util_impl<RobotRaconteur::cdouble>
 public:
     static bool near_(const RobotRaconteur::cdouble& a1, const RobotRaconteur::cdouble& a2)
     {
-        if (a1 == a2)
-            return true;
-        return (abs(a1.real-a2.real) < 1e-14) && (abs(a1.imag-a2.imag) < 1e-14);
+        return rr_array_near_util_impl<double>::near_(a1.real,a1.real) && rr_array_near_util_impl<double>::near_(a1.imag,a1.imag);        
     }
 };
 
@@ -66,9 +64,7 @@ class rr_array_near_util_impl<RobotRaconteur::cfloat>
 public:
     static bool near_(const RobotRaconteur::cfloat& a1, const RobotRaconteur::cfloat& a2)
     {
-        if (a1 == a2)
-            return true;
-        return (abs(a1.real-a2.real) < 1e-5f) && (abs(a1.imag-a2.imag) < 1e-5f);
+        return rr_array_near_util_impl<float>::near_(a1.real,a1.real) && rr_array_near_util_impl<float>::near_(a1.imag,a1.imag);
     }
 };
 
