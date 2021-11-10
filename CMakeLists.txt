@@ -4,4 +4,8 @@ project(robotraconteur_improved_tests)
 find_package(RobotRaconteur)
 include_directories(${RobotRaconteur_INCLUDE_DIR})
 
-add_subdirectory(test/lfsr)
+include(CTest)
+
+enable_testing()
+
+add_subdirectory(test)

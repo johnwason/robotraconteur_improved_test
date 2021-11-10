@@ -130,6 +130,13 @@ namespace test
             return len;
         }
 
+        uint32_t NextDist(uint32_t min_, uint32_t max_)
+        {
+            uint32_t val;
+            lfsr = robotraconteur_test_lfsr_next_dist(lfsr, min_, max_, &val);
+            return val;
+        }
+
         RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > NextInt8Array(size_t len)
         {
             RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<int8_t> > ret = RobotRaconteur::AllocateRRArray<int8_t>(len);
@@ -424,6 +431,80 @@ namespace test
                 ret[i] = NextChar();
             }
             return ret;
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRBaseArray> NextArrayByType(RobotRaconteur::DataTypes dtype, size_t len)
+        {
+            switch (dtype)
+            {
+            case DataTypes_double_t:
+                return NextDoubleArray(len);
+            case DataTypes_single_t:
+                return NextFloatArray(len);
+            case DataTypes_int8_t:
+                return NextInt8Array(len);
+            case DataTypes_uint8_t:
+                return NextUInt8Array(len);
+            case DataTypes_int16_t:
+                return NextInt16Array(len);
+            case DataTypes_uint16_t:
+                return NextUInt16Array(len);
+            case DataTypes_int32_t:
+                return NextInt32Array(len);
+            case DataTypes_uint32_t:
+                return NextUInt32Array(len);
+            case DataTypes_int64_t:
+                return NextInt64Array(len);
+            case DataTypes_uint64_t:
+                return NextUInt64Array(len);
+            case DataTypes_string_t:
+                return RobotRaconteur::stringToRRArray(NextString(len));
+            case DataTypes_bool_t:
+                return NextBoolArray(len);
+            case DataTypes_csingle_t:
+                return NextCFloatArray(len);
+            case DataTypes_cdouble_t:
+                return NextCDoubleArray(len);
+            default:
+                BOOST_ASSERT(false);
+        }
+        }
+
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRBaseArray> NextArrayByTypeVarLen(RobotRaconteur::DataTypes dtype, size_t max_len)
+        {
+            switch (dtype)
+            {
+            case DataTypes_double_t:
+                return NextDoubleArrayVarLen(max_len);
+            case DataTypes_single_t:
+                return NextFloatArrayVarLen(max_len);
+            case DataTypes_int8_t:
+                return NextInt8ArrayVarLen(max_len);
+            case DataTypes_uint8_t:
+                return NextUInt8ArrayVarLen(max_len);
+            case DataTypes_int16_t:
+                return NextInt16ArrayVarLen(max_len);
+            case DataTypes_uint16_t:
+                return NextUInt16ArrayVarLen(max_len);
+            case DataTypes_int32_t:
+                return NextInt32ArrayVarLen(max_len);
+            case DataTypes_uint32_t:
+                return NextUInt32ArrayVarLen(max_len);
+            case DataTypes_int64_t:
+                return NextInt64ArrayVarLen(max_len);
+            case DataTypes_uint64_t:
+                return NextUInt64ArrayVarLen(max_len);
+            case DataTypes_string_t:
+                return RobotRaconteur::stringToRRArray(NextStringVarLen(max_len));
+            case DataTypes_bool_t:
+                return NextBoolArrayVarLen(max_len);
+            case DataTypes_csingle_t:
+                return NextCFloatArrayVarLen(max_len);
+            case DataTypes_cdouble_t:
+                return NextCDoubleArrayVarLen(max_len);
+            default:
+                BOOST_ASSERT(false);
+        }
         }
     };
 }

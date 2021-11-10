@@ -108,6 +108,8 @@ extern "C" {
 
     ROBOTRACONTEUR_TEST_LFSR_API uint32_t robotraconteur_test_lfsr_next_len(uint32_t lfsr, size_t max_len, size_t* len_out);
 
+    ROBOTRACONTEUR_TEST_LFSR_API uint32_t robotraconteur_test_lfsr_next_dist(uint32_t lfsr, uint32_t min_, uint32_t max_, uint32_t* val_out);
+
 #ifdef __cplusplus
 }
 #endif

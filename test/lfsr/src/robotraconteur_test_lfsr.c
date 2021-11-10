@@ -1,4 +1,5 @@
 #include "robotraconteur_test_lfsr.h"
+#include <assert.h>
 
 uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32_t key_len)
 {
@@ -149,5 +150,13 @@ uint32_t robotraconteur_test_lfsr_next_len(uint32_t lfsr, size_t max_len, size_t
     {
         *len_out = 8 + ((size_t)lfsr2) % (max_len - 8);
     }
+    return lfsr2;
+}
+
+uint32_t robotraconteur_test_lfsr_next_dist(uint32_t lfsr, uint32_t min_, uint32_t max_, uint32_t* val_out)
+{
+    assert(max_ > min_);
+    uint32_t lfsr2 = robotraconteur_test_lfsr_next(lfsr);
+    *val_out = (lfsr2 % ((max_-min_)+1)) + min_;
     return lfsr2;
 }
