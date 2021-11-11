@@ -467,6 +467,7 @@ namespace test
                 return NextCDoubleArray(len);
             default:
                 BOOST_ASSERT(false);
+                return NULL;
         }
         }
 
@@ -504,7 +505,20 @@ namespace test
                 return NextCDoubleArrayVarLen(max_len);
             default:
                 BOOST_ASSERT(false);
+                return NULL;
         }
+        }
+
+        template<typename T>
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > NextArray(size_t len)
+        {
+            return RR_STATIC_POINTER_CAST<RobotRaconteur::RRArray<T> >(NextArrayByType(RobotRaconteur::RRPrimUtil<T>::GetTypeID(), len));
+        }
+
+        template<typename T>
+        RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> > NextArrayVarLen(size_t max_len)
+        {
+            return RR_STATIC_POINTER_CAST<RobotRaconteur::RRArray<T> >(NextArrayByTypeVarLen(RobotRaconteur::RRPrimUtil<T>::GetTypeID(), max_len));
         }
     };
 }

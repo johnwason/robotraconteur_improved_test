@@ -173,3 +173,5 @@ bool RRBaseArrayNear(T& arg, T& b)
 
 #define EXPECT_RRARRAY_EQ(a,b) EXPECT_TRUE(RobotRaconteur::test::RRArrayNear(a,b))
 #define EXPECT_RRBASEARRAY_EQ(a,b) EXPECT_TRUE(RobotRaconteur::test::RRBaseArrayNear(a,b))
+#define ASSERT_RRARRAY_EQ(a,b) ASSERT_TRUE(RobotRaconteur::test::RRArrayNear(a,b))
+#define ASSERT_RRBASEARRAY_EQ(a,b) ASSERT_TRUE(RobotRaconteur::test::RRBaseArrayNear(a,b))

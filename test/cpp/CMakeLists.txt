@@ -1,2 +1,3 @@
 add_subdirectory(message_serialization)
 add_subdirectory(common)
+add_subdirectory(multidimarray)
