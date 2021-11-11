@@ -32,7 +32,7 @@ uint32_t robotraconteur_test_lfsr_initkey(uint32_t seed, const char* key, uint32
 
 uint32_t robotraconteur_test_lfsr_next(uint32_t lfsr)
 {
-    uint32_t bit = ((lfsr >> 31) ^ (lfsr >> 21) ^ (lfsr >> 1) ^ (lfsr >> 0)) & 1u;
+    uint32_t bit = ((lfsr >> 0) ^ (lfsr >> 1) ^ (lfsr >> 21) ^ (lfsr >> 31)) & 1u;
     return (lfsr >> 1) | (bit << 31);
 }
 
