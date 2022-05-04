@@ -34,3 +34,12 @@ target_include_directories(robotraconteur_service_test2 PUBLIC ${CMAKE_CURRENT_B
 if (MSVC)
 	target_compile_options(robotraconteur_service_test2 PRIVATE "/bigobj")
 endif()
+
+RR_TEST_ADD_EXECUTABLE(robotraconteur_service_test3
+    SRC service_test3.cpp ServiceTestClient3.cpp ServiceTest3.cpp CompareArray.cpp ${RR_THUNK_SRCS}
+    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main    
+)
+target_include_directories(robotraconteur_service_test3 PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+if (MSVC)
+	target_compile_options(robotraconteur_service_test3 PRIVATE "/bigobj")
+endif()

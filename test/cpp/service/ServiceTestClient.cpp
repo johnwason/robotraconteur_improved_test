@@ -1226,6 +1226,16 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient::TestObjectLock(string url)
 	{
+
+		{
+			// Unlock all objects before continuing
+			RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred6=AllocateEmptyRRMap<string,RRValue>();
+			cred6->insert(make_pair("password",stringToRRArray("superpass1")));
+			RR_SHARED_PTR<testroot> r6=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url,"testsuperuser",cred6));
+			RR_SHARED_PTR<sub1> r6_o=r6->get_o1();
+			EXPECT_NO_THROW(RobotRaconteurNode::s()->ReleaseObjectLock(r6_o));
+		}
+
 		RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred1=AllocateEmptyRRMap<string,RRValue>();
 		cred1->insert(make_pair("password",stringToRRArray("testpass1")));
 		RR_SHARED_PTR<testroot> r1=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url,"testuser1",cred1));
