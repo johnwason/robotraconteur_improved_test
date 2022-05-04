@@ -168,6 +168,22 @@ bool RRBaseArrayNear(T& arg, T& b)
     return false;
 }
 
+template<typename T>
+bool RRCompareVec(const std::vector<T>& v1, const std::vector<T>& v2)
+{
+    EXPECT_EQ(v1.size(),v2.size());
+    if (v1.size() != v2.size())
+        return false;
+
+    for (size_t i=0; i<v1.size(); i++)
+    {
+        EXPECT_EQ(v1.at(i),v2.at(i)) << " at index " << i;
+        if (v1.at(i) != v2.at(i))
+            return false;
+    }
+    return true;
+}
+
 }
 }
 
@@ -175,3 +191,6 @@ bool RRBaseArrayNear(T& arg, T& b)
 #define EXPECT_RRBASEARRAY_EQ(a,b) EXPECT_TRUE(RobotRaconteur::test::RRBaseArrayNear(a,b))
 #define ASSERT_RRARRAY_EQ(a,b) ASSERT_TRUE(RobotRaconteur::test::RRArrayNear(a,b))
 #define ASSERT_RRBASEARRAY_EQ(a,b) ASSERT_TRUE(RobotRaconteur::test::RRBaseArrayNear(a,b))
+
+#define EXPECT_RRVECTOR_EQ(a,b) EXPECT_TRUE(RobotRaconteur::test::RRCompareVec(a,b))
+#define ASSERT_RRVECTOR_EQ(a,b) ASSERT_TRUE(RobotRaconteur::test::RRCompareVec(a,b))

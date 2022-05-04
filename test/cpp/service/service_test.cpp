@@ -15,14 +15,132 @@ using namespace RobotRaconteur;
 using namespace RobotRaconteurTest;
 
 
-TEST(RobotRaconteurService,PropertyTest)
+static std::string service_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService";
+static std::string service_auth_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService_auth";
+
+TEST(RobotRaconteurService,MinimalTest)
 {
-    RobotRaconteurNode::s()->SetLogLevel(RobotRaconteur_LogLevel_Debug);
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
 
     ServiceTestClient c;
-    ASSERT_NO_THROW(c.ConnectService("rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService"));
+    ASSERT_NO_THROW(c.RunMinimalTest(service_url));
+
+}
+
+TEST(RobotRaconteurService,PropertyTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
     ASSERT_NO_THROW(c.TestProperties());
     ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,FunctionTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestFunctions());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,EventTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestEvents());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,ObjRefTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestObjRefs());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,PipeTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestPipes());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,CallbackTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestCallbacks());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,WireTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestWires());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,MemoryTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.ConnectService(service_url));
+    ASSERT_NO_THROW(c.TestMemories());
+    ASSERT_NO_THROW(c.DisconnectService());
+}
+
+TEST(RobotRaconteurService,AuthenticationTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.TestAuthentication(service_auth_url));
+
+}
+
+TEST(RobotRaconteurService,ObjectLockTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.TestObjectLock(service_auth_url));
+
+}
+
+TEST(RobotRaconteurService,MonitorLockTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.TestMonitorLock(service_url));
+
+}
+
+TEST(RobotRaconteurService,AsyncTest)
+{
+    RobotRaconteurNode::s()->SetLogLevelFromEnvVariable();
+
+    ServiceTestClient c;
+    ASSERT_NO_THROW(c.TestAsync(service_auth_url));
+
 }
 
 int main(int argc, char* argv[])
