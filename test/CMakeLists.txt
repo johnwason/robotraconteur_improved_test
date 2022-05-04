@@ -6,5 +6,4 @@ include(googletest)
 
 add_subdirectory(robdef)
 add_subdirectory(lfsr)
-add_subdirectory(old_seqgen)
 add_subdirectory(cpp)
