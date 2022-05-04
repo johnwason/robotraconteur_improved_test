@@ -10,7 +10,7 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS
 
 RR_TEST_ADD_EXECUTABLE(robotraconteur_service_test
     SRC service_test.cpp ServiceTestClient.cpp CompareArray.cpp ${RR_THUNK_SRCS}
-    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_old_seqgen GTest::gtest_main    
+    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_old_seqgen robotraconteur_test_lfsr GTest::gtest_main    
 )
 
 target_include_directories(robotraconteur_service_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})

@@ -4,6 +4,7 @@
 
 #include "ServiceTestClient.h"
 #include "robotraconteur_test_old_seqgen_cpp.h"
+#include "multidim_array_util.h"
 
 using namespace std;
 using namespace boost;
@@ -18,54 +19,54 @@ using namespace RobotRaconteur::test;
 
 namespace RobotRaconteurTest
 {
-		
+
 	static void ServiceTestClient_Service_Listener(RR_SHARED_PTR<ClientContext> ctx,ClientServiceListenerEventType evt, RR_SHARED_PTR<void> p)
 	{
 		std::cout << evt;
 		if (evt == ClientServiceListenerEventType_ServicePathReleased)
 		{
-			std::cout << " path: " << *RR_STATIC_POINTER_CAST<std::string>(p);			
+			std::cout << " path: " << *RR_STATIC_POINTER_CAST<std::string>(p);
 		}
 		std::cout << endl;
 	}
 
 	void ServiceTestClient::ConnectService(string url)
 	{
-		
+
 		r=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url,"",RR_INTRUSIVE_PTR<RRMap<std::string,RRValue> >(),&ServiceTestClient_Service_Listener));
 	}
 
 	void ServiceTestClient::RunFullTest(string url, string authurl)
 	{
-		
+
 		ConnectService(url);
 
 		cout << "Test Members" << endl;
 		TestProperties();
 		TestFunctions();
-		
+
 		TestEvents();
 		TestObjRefs();
-		
+
 		TestPipes();
 		TestCallbacks();
 		TestWires();
 		TestMemories();
-		
+
 		DisconnectService();
-		
-		
-		
+
+
+
 		//boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 		cout << "Test Authentication" << endl;
 		TestAuthentication(authurl);
-		
+
 		cout << "Test Object Locks" << endl;
 		TestObjectLock(authurl);
-				
+
 		cout << "Test Monitor Locks" << endl;
 		TestMonitorLock(url);
-		
+
 		cout << "Test Async" << endl;
 		TestAsync(authurl);
 
@@ -80,7 +81,7 @@ namespace RobotRaconteurTest
 
 		cout << "Test Members" << endl;
 		//TestProperties();
-		
+
 		//basic double properties
 		r->set_d1(3.456);
 		if (r->get_d1() != 12.345) throw std::exception();
@@ -96,7 +97,7 @@ namespace RobotRaconteurTest
 		r->set_d4(AttachRRArray(d4_a, 13, false));
 		double d4_b[] = { 2.864760e-08, 3.900663e+13, 9.105789e+11, 2.943743e-15, -2.823159e-16, -3.481261e+19 };
 		ca(AttachRRArray(d4_b, 6, false), r->get_d4());
-		
+
 		TestFunctions();
 
 		TestEvents();
@@ -107,7 +108,7 @@ namespace RobotRaconteurTest
 		TestWires();
 		TestMemories();*/
 
-		DisconnectService();		
+		DisconnectService();
 
 	}
 
@@ -119,39 +120,18 @@ namespace RobotRaconteurTest
 		EXPECT_DOUBLE_EQ(r->get_d1(), OldDouble("d1_get"));
 		EXPECT_NO_THROW(r->set_d2(OldDoubles("d2_set")));
 		EXPECT_RRARRAY_EQ(OldDoubles("d2_get"),r->get_d2());
-		double d3_a[]={ 9.025110e-18, 3.567231e+17, 2.594489e+01, 2.311708e-04, 7.345164e+13, 6.550284e-01, 1.969554e+12, 9.451979e-05, 5.900637e-09, 9.975667e+03, 6.549533e-17, 2.227145e-13, 2.822132e+18, 4.332600e+18, 1.485466e+05, 5.844952e-14 };
-		EXPECT_NO_THROW(r->set_d3(AttachRRArray(d3_a,16,false)));
-		double d3_b[]={ 2.047398e-20, 2.091541e-20, 9.084241e+14, 1.583413e+01, 5.168067e-02, 1.360920e-11, 9.818531e-21, 6.293083e+07, 4.406956e-14, 8.540213e-09, 7.329310e-03, 5.566796e+00, 3.968358e-08, 4.928656e-08, 5.994301e-20, 8.281551e-21 };
-		EXPECT_RRARRAY_EQ(AttachRRArray(d3_b,16,false),r->get_d3());
-		double d4_a[]={ -4.207179e-09, -3.611333e+11, -4.155626e-06, -2.458459e+10, 2.826045e-11, 3.511191e-08, 4.759250e-07, 2.455883e+09, 4.182578e+11, 4.732337e-14, -2.967313e+02, -4.139188e+14, 6.287269e+03 };
-		EXPECT_NO_THROW(r->set_d4(AttachRRArray(d4_a,13,false)));
-		double d4_b[]={ 2.864760e-08, 3.900663e+13, 9.105789e+11, 2.943743e-15, -2.823159e-16, -3.481261e+19 };
-		EXPECT_RRARRAY_EQ(AttachRRArray(d4_b,6,false),r->get_d4());
+		EXPECT_NO_THROW(r->set_d3(OldDoubles("d3_set")));
+		EXPECT_RRARRAY_EQ(OldDoubles("d3_get"),r->get_d3());
+		EXPECT_NO_THROW(r->set_d4(OldDoubles("d4_set")));
+		EXPECT_RRARRAY_EQ(OldDoubles("d4_get"),r->get_d4());
 
 		//multi dim arrays
+		EXPECT_NO_THROW(r->set_d5(OldMDoubles("d5_set")));
+		EXPECT_RRMULTIDIMARRAY_EQ(OldMDoubles("d5_get"),r->get_d5());
 
-		uint32_t d5_a1[]={ 8, 6, 2 };
-		double d5_a2[]={ -5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05, 3.809620e-11, 1.751983e-09, 2.207872e-21, 1.432794e+09, -1.970313e+11, 3.405643e-18, -3.756282e+14, -4.918649e+08, -3.162526e-14, -2.853298e-09, 2.835704e+10, 4.458564e+16, 6.657007e+09, 3.640798e-10, 4.950898e-06, 3.384446e+14, -4.065667e+16, -2.243648e-05, 4.822028e-21, 4.231462e-14, -2.526315e+11, -5.626782e-05, 2.321837e+13, 1.772942e-09, 1.606989e-08, 2.669910e-04, -3.635773e+08, -3.967874e-10, 6.599470e+15, 4.612631e-08, -1.417977e-11, -8.066614e-18, 5.738945e+15, 6.408315e+13, 1.922621e+12, 3.096211e-14, -2.079924e+18, 1.664290e+09, -4.502488e+07, 3.092768e+05, 4.414553e+10, -3.673268e+02, -4.772391e+17, -1.100877e+02, -1.453900e+01, 4.293918e-13, -4.270900e-02, -3.886217e+11, -2.206806e+02, 7.034173e-07, -2.826108e-21, 3.616703e-21, -3.385765e+04, -7.027764e-11, 9.684099e+05, -4.248931e+03, -3.415720e-20, -3.315237e-11, -9.555895e+11, 3.520893e-13, 1.089514e-13, 3.591828e-21, -4.847746e-06, -2.678605e-16, -7.480139e-04, 2.208833e+01, 1.075027e-07, -1.047160e-05, 2.309356e+06, 7.308158e-19, -4.915658e+02, 4.634137e+18, -3.682525e+13, 4.124301e-06, 4.158100e-10, 2.091672e-11, -6.856023e+07, 8.418116e-07, -1.655783e-13, -2.502703e-03, 1.274299e+17, -4.784498e-20, 1.357464e-10, 4.107075e-13, -2.753087e-05, -2.594853e-14, -3.712038e-13, 1.143743e+14, -2.495491e+10, 2.331111e-15, 2.987117e+18, 2.876066e-18 };
-		EXPECT_NO_THROW(r->set_d5(AllocateRRMultiDimArray<double>(AttachRRArray(d5_a1,3,false),AttachRRArray(d5_a2,96,false))));
-
-		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > d5_2=r->get_d5();
-		uint32_t d5_b1[]={5,6,5};
-		double d5_b2[]={ 4.427272e-10, -1.149547e-08, -1.134096e+16, -4.932974e-03, -7.702447e-01, -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03, 2.746211e+01, -4.388241e-17, 2.262009e+00, 5.239907e+06, 4.665437e-05, -1.662221e-05, 5.471877e-13, 2.592797e+11, -4.109763e-05, 1.797563e-04, 1.654153e+01, 4.011197e+07, -2.261820e-10, 5.836798e+02, 1.518876e-18, 4.814150e+18, -4.610985e-07, -3.126663e-07, -1.981883e+10, 4.117556e-02, 1.937380e-07, 1.397017e-10, 2.809413e-17, 9.387278e+18, 4.777753e-11, -4.248411e+15, 3.851890e-16, -1.598907e-08, 3.699930e+14, 2.763725e-08, -4.130363e+17, 3.105159e+06, -2.026574e+00, 3.956735e+01, 3.893311e-04, 3.574216e+13, 3.618918e+03, -4.027656e-09, 9.174470e-02, -8.108362e-21, 1.857260e-18, -3.540422e+13, -2.985196e+12, -3.219711e-08, -1.618670e-13, -2.648920e+12, 1.224910e-14, -4.740355e-03, 4.604337e-18, 3.809723e+05, -4.460252e+15, 1.894675e-15, -4.141572e-08, -3.939165e-09, -1.916940e-06, -2.382435e+16, -4.689458e-01, 1.498825e+17, 1.876067e-15, -1.801776e+09, -1.140569e-05, -6.881731e-08, -4.835017e-07, 3.843821e-17, 2.220728e+06, -4.321528e+10, -3.950910e+01, -1.732064e-11, 3.009556e-16, -3.509908e+18, -7.781366e-15, -2.511896e-18, -2.037492e+04, 2.656214e-19, 2.163108e+16, 4.526743e+19, 2.738915e-11, 8.491186e-16, -1.286244e+05, 3.635668e+12, -4.964943e+15, 3.725194e+05, -4.010695e-19, 2.140069e-09, 3.957374e+19, 4.478530e-06, 4.284617e-06, -3.459065e+12, 1.525227e-18, 4.892990e+06, 3.557063e+07, 2.986931e+18, 2.147683e-05, -4.190776e+17, -3.715918e-14, -3.448233e+01, 1.272542e+15, -3.900619e-06, -3.712080e+05, 3.388577e+04, -4.440968e-11, -4.395263e+18, -4.052174e-06, -3.065725e+00, 3.915471e-04, 4.863505e+12, 4.861871e-09, 4.607456e+03, -1.845908e-12, -9.985457e-11, -4.534696e-08, -1.163049e-17, 4.492446e-11, 3.078345e+06, 8.520733e+05, 2.218171e+14, -4.546400e+09, 4.641295e+09, -1.677260e-07, 9.650426e+04, -4.001218e-04, 4.761655e-22, -3.989865e+01, -5.800472e-08, -2.548565e-01, 4.648520e-08, 4.255433e-16, -2.387043e-11, 4.172928e+17, 4.194274e-12, -1.391555e-04, -1.063723e-01, 1.609824e-13, 9.196780e-10, -4.744075e+06, -4.764303e-02, -4.540535e-10, -4.361282e+00, -1.460081e+01, -2.215205e-16, 4.652514e-19 };
-		EXPECT_RRARRAY_EQ(d5_2->Dims,AttachRRArray(d5_b1,3,false));
-		EXPECT_RRARRAY_EQ(d5_2->Array,AttachRRArray(d5_b2,150,false));
+		EXPECT_NO_THROW(r->set_d6(OldMDoubles("d6_set")));
+		EXPECT_RRMULTIDIMARRAY_EQ(OldMDoubles("d6_get"),r->get_d6());
 		
-
-		uint32_t d6_a1[]={ 3,3 };
-		double d6_a2[]={ -5.528040e-08, 3.832644e-01, -9.139211e-22, -4.919312e-05, 3.809620e-11, 1.751983e-09, 2.207872e-21, 1.432794e+09, -1.970313e+11};
-		EXPECT_NO_THROW(r->set_d6(AllocateRRMultiDimArray<double>(AttachRRArray(d6_a1,2,false),AttachRRArray(d6_a2,9,false))));
-
-		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > d6_2=r->get_d6();
-		uint32_t d6_b1[]={3,3};
-		double d6_b2[]={ 4.427272e-10, -1.149547e-08, -1.134096e+16, -4.932974e-03, -7.702447e-01, -3.468374e-03, -5.037849e-14, -4.140513e-08, 4.553774e+03};
-		EXPECT_RRARRAY_EQ(d6_2->Dims,AttachRRArray(d6_b1,2,false));
-		EXPECT_RRARRAY_EQ(d6_2->Array,AttachRRArray(d6_b2,9,false));
-		
-
 		//Test various number types
 
 		//floats
@@ -285,7 +265,7 @@ namespace RobotRaconteurTest
 		ca(s1->multidimarray->Dims,AttachRRArray(s1_mul_a,2,false));
 		ca(s1->multidimarray->Array,AttachRRArray(s1_mul_b,100,false));
 
-		
+
 		//Set large structure for struct1
 		RR_INTRUSIVE_PTR<teststruct1> s2(new teststruct1());
 		double dat1a[]={ 1.139065e-13, -1.909737e+06, 2.922498e+18, -1.566896e+15, 3.962168e+17, -3.165123e+17, -1.136212e+13, 3.041245e+16, -4.181809e-18, 3.605211e-18, -3.326815e-15, -4.686443e+05, -1.412792e+02, -3.823811e-14, -6.378268e-09, 1.260742e-14, -2.136740e-16, -4.074535e-10, 2.218924e+01, -3.400058e-08, 2.272064e+02, -2.982901e-21, 4.939616e-19, -4.745500e+03, -1.985464e+16, 3.374194e-04, -8.740159e-09, 1.470782e-06, -2.053287e+06, 4.007725e-13, -1.598806e-13, 2.693773e-06, -3.538743e-08, 4.854976e-16, -4.778583e-12, 3.069631e+06, -3.749499e+03, 3.995802e+05, -2.864014e+13, 1.276877e-13, -4.479297e-02, -9.546403e-13, 8.708525e+06, 3.800176e+04, 4.147260e+10, 2.252187e-20, 9.565646e-14, 4.177809e+13, 3.032250e+01, 3.508303e+10, -4.579380e-17, 1.128779e+05, -1.064335e+11, 1.795376e-06, -1.903884e+09, 2.699039e-03, 3.658452e+15, 4.534803e+15, 1.366079e-03, -3.557323e+07, -4.920382e+18, -3.358988e-07, -4.024967e-11, -4.784915e+16, 1.490340e-18, -4.343678e+08, -1.955643e+14 };
@@ -360,7 +340,7 @@ namespace RobotRaconteurTest
 		if (is_d2_1->size()!=2) throw std::exception();
 		if (RRArrayToScalar(is_d2_1->at("testval1")) != -1.079664e+16) throw new std::exception();
         if (RRArrayToScalar(is_d2_1->at("testval2")) != 2.224846e+00) throw new std::exception();
-		
+
 		RR_INTRUSIVE_PTR<RRMap<string,RRArray<double> > > is_d2_2=AllocateEmptyRRMap<string,RRArray<double> >();
 		is_d2_2->insert(make_pair("testval3",ScalarToRRArray(5.242474e+10)));
         is_d2_2->insert(make_pair("testval4",ScalarToRRArray(2.208636e+08)));
@@ -393,7 +373,7 @@ namespace RobotRaconteurTest
 		if (is_d4_1->size()!=2) throw std::exception();
 		ca(is_d4_1->at("testval1") , AttachRRArray(is_d4_1a,20,false));
         ca(is_d4_1->at("testval2") ,AttachRRArray(is_d4_1b,20,false));
-		
+
 		double is_d4_2a[]={ 1.771838e+06, 3.037284e-01, -1.739742e-02, 1.399508e-20, 3.605232e-21, 3.517522e+14, 4.887514e+14, 3.505442e-03, -3.968972e+18, 1.422037e-20, 2.596937e-21, 4.852833e-11, 6.852955e-17, 4.765526e-12, -3.445954e+16, 2.322531e-14, -1.755122e-12, 3.941875e+00, 8.877046e-13, 2.818923e-02 };
 		double is_d4_2b[]={ 4.146439e+16, 2.923439e-07, 3.549608e+16, -1.664891e-01, -4.192309e-15, 3.857317e+05, -1.101076e+00, 1.213105e+19, 3.237584e-14, -2.421219e-06, -4.603196e-05, -3.719535e-10, 1.124961e+06, 2.032849e+10, 4.639704e-22, 3.946835e+01, -9.267263e+01, -4.456188e+11, 3.470487e+08, 7.918764e+10 };
 
@@ -410,7 +390,7 @@ namespace RobotRaconteurTest
 		ca(is_d5_1_1->Dims,AttachRRArray(is_d5_1_1a,2,false));
 		double is_d5_1_1b[]={ -2.240130e+14, 1.609980e+16, -1.794755e+07, 8.108785e+17, -2.296286e+08, -2.689029e+13, 2.036672e+07, -4.822871e-02, 4.070748e-05, -2.894952e-04, -1.728526e+17, 4.077694e-19, -2.977734e+13, -9.428667e+03, 2.672315e-08, -1.844359e+19, 4.243010e+09, 4.592716e-01, -3.792531e+10, 3.117892e+04, -1.830821e-16, -3.702984e-18, -1.957300e+12, 9.017553e+12, -2.184986e-17, 1.436890e-02, 4.008279e-12, -2.407568e+10, -3.170667e-07, -2.315539e+16, 6.646599e+09, 2.443847e-01, 1.928730e-21, 3.089540e+00, 2.813232e-02, 1.352336e-21, -3.562256e+05, 3.778036e+08, -3.726478e-13, 3.112159e+15, 3.573414e+17, 3.607559e+09, -2.923247e-19, -2.079346e+14, -4.611547e-16, 2.200040e+00, 3.670772e+07, -4.176987e-20, 2.086575e+06, -2.388241e+01, -3.759717e-19, -2.232760e-01, 9.066157e-21, 2.797633e+07, 3.455296e+00, -3.306761e-08, -2.062866e-22, -4.653724e+07, -3.694312e-17, 2.254095e-06, 3.519767e-16, 1.292737e-06, -3.840896e-08, -1.946825e-20, 2.639141e+18, 3.021503e+07, -1.834066e+18, 4.474920e-02, 3.005033e-20, -1.233782e-10, -3.260111e-08, 2.326419e-09, -2.298222e-19, 7.554873e+15, 2.378479e+19, -5.092127e-03, -4.724838e-07, 3.204184e+06, 2.713748e-12, 1.574309e-05, 6.622323e-01, -4.944461e-01, -1.559672e+19, -3.350494e+15, 2.467451e-14, -4.881873e+13, 1.031263e+15, -4.051814e+12, 1.418548e+07, 1.204368e+17, -4.113152e-02, -4.472069e+16, 4.896886e-14, 2.371633e+05, 3.543019e+04, -3.083516e-22, 1.041761e-09, -2.579812e-06, -2.937567e+09, -4.775349e-16 };
 		ca(is_d5_1_1->Array,AttachRRArray(is_d5_1_1b,100,false));
-		
+
 		uint32_t is_d5_2_1a[]={10,20};
 		double is_d5_2_1b[]={ 2.792909e-01, 6.554477e+16, 4.240073e-13, -4.490109e+19, 5.410527e-22, -2.244599e+17, -2.656142e-02, -3.819500e+13, -7.086082e-02, 7.790729e-13, 3.375900e-12, -6.915692e+09, -2.900437e-18, 1.257280e+05, -3.810852e+15, -4.589554e-12, 2.670612e-14, 4.725686e+06, -3.018046e+07, 2.439452e+07, 2.726039e-07, -2.805143e+02, -1.870376e+03, 4.573047e-06, 1.904868e+19, -1.966383e+00, 3.426469e-11, -1.400396e+13, -1.724273e+09, -7.347198e+10, -4.081057e-12, -3.868203e+10, -2.686071e+13, -5.289107e+01, -5.574151e-09, -2.580185e-06, -8.222097e-21, -4.957833e-12, -2.491984e+03, -7.900042e+16, -4.809370e-11, -2.048332e-19, 4.984852e-21, 1.350023e+13, -4.492022e-11, -3.255594e+10, 1.495149e-09, -7.272628e+02, -4.236196e-04, 4.736990e-02, -4.030173e-11, 1.017371e+11, 1.124559e-09, 4.177431e-21, 1.026706e+06, -4.702729e-04, -2.633498e+18, -4.689724e+08, -2.593657e+05, 3.433194e-18, -1.977738e-13, -1.163773e+03, 3.424738e-20, 7.391132e-06, 1.364867e+12, -7.155727e+16, 3.078093e-21, -3.151787e-04, -4.715633e+06, 1.017894e+19, -1.121778e+14, -3.529769e-10, 4.530606e+19, 3.988296e-17, -3.469818e+06, 1.204304e+03, -1.404314e+15, -1.369871e+04, -2.796125e-03, -4.842068e-06, -2.639632e-03, 1.324740e+08, 1.440651e+07, -4.778885e+03, -4.643859e+06, 1.726955e-09, -8.160334e+05, 3.763238e+13, 1.391028e+02, -4.269393e+04, -2.698233e+02, -3.677556e+14, 1.070699e-17, 3.949376e+19, 4.503080e-06, 4.344496e-07, 1.714091e-19, -3.436426e+01, 4.914505e+15, -1.101617e+09, -1.899511e-04, 2.195951e-06, 2.402701e-12, 1.783431e-09, -7.329137e-08, 4.423889e+16, 2.812547e-19, -7.848554e+05, -3.635151e+13, 3.128605e-09, -2.858963e+08, 2.086065e-11, -2.544450e+12, 1.450579e+19, -1.508905e+13, 4.307174e+00, 1.038108e-05, 4.313281e-05, 3.647351e+05, 1.309105e-16, 4.180469e+13, -2.701332e-07, -4.033566e+14, -3.116748e-06, 2.342296e-07, 1.870335e-19, 2.312273e+01, -4.478923e+08, -4.854324e+09, 2.681828e+03, -4.280128e-01, -4.690703e-21, 3.853815e+16, 1.366639e+02, -2.944985e-11, -4.486958e-13, 3.017750e-11, 3.551437e-13, 2.263828e-12, -6.545014e-18, -7.552023e+12, 7.595238e+14, 2.810247e+12, 6.516008e+15, -3.035786e+14, 2.523040e+11, -3.766603e+09, 7.316287e+18, -2.147132e+17, 1.972210e+10, 2.906768e-13, 4.226577e-14, -2.640568e+17, 2.181408e+10, -1.043256e-08, -3.649181e+06, -2.776638e+18, 3.660147e-07, -1.415433e-17, -4.945127e-17, 2.655050e+01, -2.269828e+04, -2.585499e-01, -3.299965e+05, 3.707494e-18, -1.257923e-19, -1.321880e+14, -1.815888e-12, 9.366926e-09, 1.024923e-14, 4.494907e+04, -2.596971e-20, -3.403446e-12, 1.537084e+17, -3.850430e-17, -4.821759e+05, 4.255435e-20, -1.016978e-16, 1.430658e-09, -3.696861e-14, -4.427905e-19, -1.999724e-09, -3.489402e-06, -4.677864e-03, 1.246884e+13, -4.458271e-19, 3.551905e-04, -4.458221e-20, -3.472033e+01, -1.745714e+08, 4.396891e+03, 4.345767e+02, -1.800116e+05, -1.217318e+00, 3.605072e-08, 1.306109e-09, -2.798295e+16, 4.387728e-13, -3.284039e+11, 3.424124e+17 };
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > is_d5_2_1=AllocateRRMultiDimArray<double>(AttachRRArray(is_d5_2_1a,2,false),AttachRRArray(is_d5_2_1b,200,false));
@@ -426,7 +406,7 @@ namespace RobotRaconteurTest
 		ca(is_d6_1_1->Dims,AttachRRArray(is_d6_1_1a,2,false));
 		double is_d6_1_1b[]={ 4.229153e+02, 3.406523e+03, -2.158208e+15, -7.464845e+07, -4.763504e+18, 6.777497e-20, -1.265130e+18, 2.145141e+12, -8.473642e-18, -3.780104e+17, -4.356069e+06, 1.199990e+04, -2.413259e+07, -2.609077e-12, -2.121030e-16, -1.224176e+09, -2.836294e-15, -1.975701e-18, 4.311314e-04, -4.932020e-20, -1.307735e-18, -4.000536e+02, -1.718325e+15, -3.493595e+05, 1.707089e+00, 4.416780e+01, -1.152954e-13, 8.396437e-02, -4.304750e+16, 1.154166e+02, -2.331328e-02, 4.821737e-04, 5.831989e-20, -6.887913e+06, -1.592772e+11, 4.730754e-19, 2.543760e-17, -5.864767e+14, 2.077122e-13, 2.801695e-12, -1.171678e+12, -8.854966e+18, -1.555508e-08, 3.589410e+11, -1.495443e-21, 2.876586e-06, -2.265460e-03, 2.544109e-03, 2.019117e-06, -6.458547e-21 };
 		ca(is_d6_1_1->Array,AttachRRArray(is_d6_1_1b,50,false));
-		
+
 		uint32_t is_d6_2_1a[]={8,10};
 		double is_d6_2_1b[]={ 2.080438e+03, -2.901444e-01, 2.561452e+12, 6.760682e+14, -2.461568e-10, -4.811907e-20, 6.299564e+11, -2.660066e-19, 4.643316e+13, 3.292265e-13, 1.187460e+19, 3.054313e-07, 3.503026e-20, -1.465147e-08, 3.993039e-17, 2.469296e-10, -4.014504e+07, 1.810733e+17, -3.976509e-19, -9.166607e+15, 1.854678e+02, 2.884879e-12, -4.382521e+14, 3.064407e-05, -9.542195e+07, -3.938411e-13, -2.850416e-03, 3.042038e+14, 1.464437e-12, -1.550126e-06, 4.938341e+11, -3.517527e+19, 3.135793e+19, 1.380313e-14, -1.060961e+18, 2.833127e-10, -1.862230e+02, -2.232851e-05, 4.773548e-05, 3.746071e+13, -4.972451e+09, 4.553754e-14, -8.183438e+10, 3.739120e+18, -1.619189e+19, 4.644394e+08, -8.327578e-11, 4.080876e-02, -2.806082e-03, -1.595033e-06, 1.973067e+16, 2.989575e-07, -8.974247e+15, -4.204211e-03, 1.513025e-02, -4.604953e+03, 4.107290e+16, -3.631920e+12, -1.902472e+13, -4.186326e-14, 2.465135e+13, 5.060414e+12, 7.508582e+11, 3.233186e-14, -6.750005e+14, -9.467336e-16, 2.101440e+03, -1.162425e+08, 7.808216e+04, 4.356208e-19, -3.316834e+14, 3.299774e-19, -3.746431e-16, -3.971172e-07, 2.423744e+10, 1.542747e+17, 2.358704e-05, 4.201668e+17, -3.736856e+07, 3.585645e-07 };
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > is_d6_2_1=AllocateRRMultiDimArray<double>(AttachRRArray(is_d6_2_1a,2,false),AttachRRArray(is_d6_2_1b,80,false));
@@ -499,7 +479,7 @@ namespace RobotRaconteurTest
 		ca(list_d5_1_1->Dims,AttachRRArray(list_d5_1_1a,2,false));
 		double list_d5_1_1b[]={ -2.240130e+14, 1.609980e+16, -1.794755e+07, 8.108785e+17, -2.296286e+08, -2.689029e+13, 2.036672e+07, -4.822871e-02, 4.070748e-05, -2.894952e-04, -1.728526e+17, 4.077694e-19, -2.977734e+13, -9.428667e+03, 2.672315e-08, -1.844359e+19, 4.243010e+09, 4.592716e-01, -3.792531e+10, 3.117892e+04, -1.830821e-16, -3.702984e-18, -1.957300e+12, 9.017553e+12, -2.184986e-17, 1.436890e-02, 4.008279e-12, -2.407568e+10, -3.170667e-07, -2.315539e+16, 6.646599e+09, 2.443847e-01, 1.928730e-21, 3.089540e+00, 2.813232e-02, 1.352336e-21, -3.562256e+05, 3.778036e+08, -3.726478e-13, 3.112159e+15, 3.573414e+17, 3.607559e+09, -2.923247e-19, -2.079346e+14, -4.611547e-16, 2.200040e+00, 3.670772e+07, -4.176987e-20, 2.086575e+06, -2.388241e+01, -3.759717e-19, -2.232760e-01, 9.066157e-21, 2.797633e+07, 3.455296e+00, -3.306761e-08, -2.062866e-22, -4.653724e+07, -3.694312e-17, 2.254095e-06, 3.519767e-16, 1.292737e-06, -3.840896e-08, -1.946825e-20, 2.639141e+18, 3.021503e+07, -1.834066e+18, 4.474920e-02, 3.005033e-20, -1.233782e-10, -3.260111e-08, 2.326419e-09, -2.298222e-19, 7.554873e+15, 2.378479e+19, -5.092127e-03, -4.724838e-07, 3.204184e+06, 2.713748e-12, 1.574309e-05, 6.622323e-01, -4.944461e-01, -1.559672e+19, -3.350494e+15, 2.467451e-14, -4.881873e+13, 1.031263e+15, -4.051814e+12, 1.418548e+07, 1.204368e+17, -4.113152e-02, -4.472069e+16, 4.896886e-14, 2.371633e+05, 3.543019e+04, -3.083516e-22, 1.041761e-09, -2.579812e-06, -2.937567e+09, -4.775349e-16 };
 		ca(list_d5_1_1->Array,AttachRRArray(list_d5_1_1b,100,false));
-		
+
 		//int list_d5_2_1a[]={10,20};
 		//double list_d5_2_1b[]={ 2.792909e-01, 6.554477e+16, 4.240073e-13, -4.490109e+19, 5.410527e-22, -2.244599e+17, -2.656142e-02, -3.819500e+13, -7.086082e-02, 7.790729e-13, 3.375900e-12, -6.915692e+09, -2.900437e-18, 1.257280e+05, -3.810852e+15, -4.589554e-12, 2.670612e-14, 4.725686e+06, -3.018046e+07, 2.439452e+07, 2.726039e-07, -2.805143e+02, -1.870376e+03, 4.573047e-06, 1.904868e+19, -1.966383e+00, 3.426469e-11, -1.400396e+13, -1.724273e+09, -7.347198e+10, -4.081057e-12, -3.868203e+10, -2.686071e+13, -5.289107e+01, -5.574151e-09, -2.580185e-06, -8.222097e-21, -4.957833e-12, -2.491984e+03, -7.900042e+16, -4.809370e-11, -2.048332e-19, 4.984852e-21, 1.350023e+13, -4.492022e-11, -3.255594e+10, 1.495149e-09, -7.272628e+02, -4.236196e-04, 4.736990e-02, -4.030173e-11, 1.017371e+11, 1.124559e-09, 4.177431e-21, 1.026706e+06, -4.702729e-04, -2.633498e+18, -4.689724e+08, -2.593657e+05, 3.433194e-18, -1.977738e-13, -1.163773e+03, 3.424738e-20, 7.391132e-06, 1.364867e+12, -7.155727e+16, 3.078093e-21, -3.151787e-04, -4.715633e+06, 1.017894e+19, -1.121778e+14, -3.529769e-10, 4.530606e+19, 3.988296e-17, -3.469818e+06, 1.204304e+03, -1.404314e+15, -1.369871e+04, -2.796125e-03, -4.842068e-06, -2.639632e-03, 1.324740e+08, 1.440651e+07, -4.778885e+03, -4.643859e+06, 1.726955e-09, -8.160334e+05, 3.763238e+13, 1.391028e+02, -4.269393e+04, -2.698233e+02, -3.677556e+14, 1.070699e-17, 3.949376e+19, 4.503080e-06, 4.344496e-07, 1.714091e-19, -3.436426e+01, 4.914505e+15, -1.101617e+09, -1.899511e-04, 2.195951e-06, 2.402701e-12, 1.783431e-09, -7.329137e-08, 4.423889e+16, 2.812547e-19, -7.848554e+05, -3.635151e+13, 3.128605e-09, -2.858963e+08, 2.086065e-11, -2.544450e+12, 1.450579e+19, -1.508905e+13, 4.307174e+00, 1.038108e-05, 4.313281e-05, 3.647351e+05, 1.309105e-16, 4.180469e+13, -2.701332e-07, -4.033566e+14, -3.116748e-06, 2.342296e-07, 1.870335e-19, 2.312273e+01, -4.478923e+08, -4.854324e+09, 2.681828e+03, -4.280128e-01, -4.690703e-21, 3.853815e+16, 1.366639e+02, -2.944985e-11, -4.486958e-13, 3.017750e-11, 3.551437e-13, 2.263828e-12, -6.545014e-18, -7.552023e+12, 7.595238e+14, 2.810247e+12, 6.516008e+15, -3.035786e+14, 2.523040e+11, -3.766603e+09, 7.316287e+18, -2.147132e+17, 1.972210e+10, 2.906768e-13, 4.226577e-14, -2.640568e+17, 2.181408e+10, -1.043256e-08, -3.649181e+06, -2.776638e+18, 3.660147e-07, -1.415433e-17, -4.945127e-17, 2.655050e+01, -2.269828e+04, -2.585499e-01, -3.299965e+05, 3.707494e-18, -1.257923e-19, -1.321880e+14, -1.815888e-12, 9.366926e-09, 1.024923e-14, 4.494907e+04, -2.596971e-20, -3.403446e-12, 1.537084e+17, -3.850430e-17, -4.821759e+05, 4.255435e-20, -1.016978e-16, 1.430658e-09, -3.696861e-14, -4.427905e-19, -1.999724e-09, -3.489402e-06, -4.677864e-03, 1.246884e+13, -4.458271e-19, 3.551905e-04, -4.458221e-20, -3.472033e+01, -1.745714e+08, 4.396891e+03, 4.345767e+02, -1.800116e+05, -1.217318e+00, 3.605072e-08, 1.306109e-09, -2.798295e+16, 4.387728e-13, -3.284039e+11, 3.424124e+17 };
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > list_d5_2_1=AllocateRRMultiDimArray<double>(AttachRRArray(is_d5_2_1a,2,false),AttachRRArray(is_d5_2_1b,200,false));
@@ -508,10 +488,10 @@ namespace RobotRaconteurTest
 		r->set_list_d5(list_d5_2);
 
 		//Test list_str1
-		
+
 
 		//Test list_struct1
-        
+
 		RR_INTRUSIVE_PTR<RRList<teststruct2> > list_struct1_1=r->get_list_struct1();
 		double list_struct1_1a[]={ -9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03, 3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21 };
 		ca(list_struct1_1->front()->mydat,AttachRRArray(list_struct1_1a,20,false));
@@ -533,7 +513,7 @@ namespace RobotRaconteurTest
 		r->set_struct3(struct3_1);
 
 		//Test var1  TODO...
-            
+
         //Test var2 TODO...
 
         //Test var_num
@@ -557,7 +537,7 @@ namespace RobotRaconteurTest
 		var_struct_1->mydat=AttachRRArray(var_struct1_1a,20,false);
 		r->set_var_struct(var_struct_1);
 		//TODO: add in all the other test values
-		
+
 		//Test var_vector
 		if (RRArrayToString(rr_cast<RRArray<char> >(rr_cast<RRMap<int32_t,RRValue> >(r->get_var_vector())->at(10)))!="Hello Client!") throw std::exception();
 		RR_INTRUSIVE_PTR<RRMap<int32_t,RRValue> > var_vector_1=AllocateEmptyRRMap<int32_t,RRValue>();
@@ -575,7 +555,7 @@ namespace RobotRaconteurTest
 		RR_INTRUSIVE_PTR<RRList<RRValue> > var_list_1 = AllocateEmptyRRList<RRValue>();
 		var_list_1->push_back(stringToRRArray("Hello Server!"));
 		r->set_var_list(var_list_1);
-		
+
 		//Test var_multidimarray
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > var_a_1=rr_cast<RRMultiDimArray<double> >(r->get_var_multidimarray());
 		uint32_t var_a_1a[]={5,4};
@@ -586,11 +566,11 @@ namespace RobotRaconteurTest
 		double var_a_2b[]={ 3.792953e+00, 2.968121e-17, -3.976413e-15, 4.392986e+19, 2.197463e+10, -2.627743e-14, -2.184665e+17, 1.972257e-17, 9.929684e-03, -3.096821e+17, 3.598051e+11, -6.266015e-18, 1.811985e-11, 2.815232e-07, 7.469467e-06, 6.141798e+13, 3.105763e+09, -1.697809e-10, -4.141707e-17, 4.391634e+13 };
 		r->set_var_multidimarray(AllocateRRMultiDimArray<double>(AttachRRArray(var_a_2a,2,false),AttachRRArray(var_a_2b,20,false)));
 
-		
+
 		//Test errtest and make sure an std::exception is thrown
-		
+
 		bool err1 = false;
-		
+
         try
         {
             r->set_errtest(1);
@@ -675,12 +655,12 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient::TestEvents()
 	{
-		
+
 
 	boost::signals2::connection c1=r->get_ev1().connect(boost::bind(&ServiceTestClient::ev1_cb,this));
 	boost::signals2::connection c2=r->get_ev2().connect(boost::bind(&ServiceTestClient::ev2_cb,this,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 
-	
+
 
 	r->func1();
 	r->func2(27.3, 98.23);
@@ -753,7 +733,7 @@ namespace RobotRaconteurTest
 
         RR_SHARED_PTR<sub3> o2_10_o2_1_32_o3_ind1 = o2_10_o2_1_32->get_o3_1("ind1");
         RR_SHARED_PTR<sub3> o2_10_o2_1_32_o3_ind2 = o2_10_o2_1_32->get_o3_1("ind2");
-	
+
 		double o_d1a[] ={ -2.086627e+06, 3.092642e+04, -1.981667e+02, 1.963286e-20, 4.264052e-08, 3.594320e+12, -4.820517e-02, -3.629590e+06, 6.037089e-07, 3.328419e+06 };
 		o1->set_d1(AttachRRArray(o_d1a,10,false));
 		double o_d1b[]={ 4.978178e-14, 2.867603e-17, 4.471047e-21, -2.002902e+15, -2.910881e-03, -2.601092e-03, -3.043199e+16, -3.257109e-12, 1.834255e-11, -3.383015e+00 };
@@ -785,14 +765,14 @@ namespace RobotRaconteurTest
 		o6_1_1->set_data("Hello world!");
 		}, 500);
 
-        r->o6_op(1);		
+        r->o6_op(1);
         ShouldBeErr_Timeout( { o6_1->set_d1 ( ScalarToRRArray(0.0) ); }, 1000);
         ShouldBeErr_Timeout( { o6_1_1->set_data ("Hello world!"); }, 1000);
 
         RR_SHARED_PTR<sub2> o6_2 = rr_cast<sub2>(r->get_o6());
         o6_2->set_data("Hello world!");
 
-        r->o6_op(2);        
+        r->o6_op(2);
         ShouldBeErr_Timeout( { o6_2->set_data("Hello world!"); }, 1000);
 
         RR_SHARED_PTR<com::robotraconteur::testing::TestService2::subobj> o6_3 = rr_cast<com::robotraconteur::testing::TestService2::subobj>(r->get_o6());
@@ -814,7 +794,7 @@ namespace RobotRaconteurTest
         r->get_cb_meaning_of_life()->SetFunction(boost::bind(&ServiceTestClient::cb_meaning_of_life_func,this));
         r->get_cb_errtest()->SetFunction(boost::bind(&ServiceTestClient::cb_errtest,this));
 
-            
+
 
         r->test_callbacks();
 
@@ -883,7 +863,7 @@ namespace RobotRaconteurTest
 		e2->SendPacket(AttachRRArray(d5,1,false));
 		e2->SendPacket(AttachRRArray(d6,1,false));
 
-	
+
 		RR_INTRUSIVE_PTR<teststruct2> s1(new teststruct2());
 		s1->mydat=AttachRRArray(d7,1,false);
 		RR_INTRUSIVE_PTR<teststruct2> s2(new teststruct2());
@@ -899,13 +879,13 @@ namespace RobotRaconteurTest
 		RR_INTRUSIVE_PTR<RRArray<double> > e1_3_2;
 		if (!e1->TryReceivePacketWait(e1_3_1, 5000, true)) throw std::exception();
 		if (!e1->TryReceivePacketWait(e1_3_2, 5000, true)) throw std::exception();
-		
+
 		ca(e1_3_1, AttachRRArray(d3, 4, false));
 		ca(e1_3_2, AttachRRArray(d3, 4, false));
 
 		if (!ee2.WaitOne(5000)) throw std::exception();
 		if (!ee3.WaitOne(5000)) throw std::exception();
-		
+
 		ca(e2->ReceivePacket(), AttachRRArray(d4,1,false));
 		ca(e2->ReceivePacket(), AttachRRArray(d5,1,false));
 		ca(e2->ReceivePacket(), AttachRRArray(d6,1,false));
@@ -980,7 +960,7 @@ namespace RobotRaconteurTest
 		double d1[]={ -2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 };
 		w1->SetOutValue(AttachRRArrayCopy(d1,10));
 
-		
+
 		RR_INTRUSIVE_PTR<teststruct2> s2(new teststruct2());
 		double d2[]={-1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21, -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10};
 		s2->mydat=AttachRRArrayCopy(d2,10);
@@ -999,10 +979,10 @@ namespace RobotRaconteurTest
 		if (!we2.WaitOne(5000)) throw std::exception();
 		if (!we3.WaitOne(5000)) throw std::exception();
 
-		
-		
+
+
 		double d3[] = { -2.377683e+02, -6.760080e-08, 4.191315e-18, -4.621977e+07, -1.570323e+03, -4.163378e+03, -2.506701e+13, -4.755701e+18, -1.972380e-19, 1.791593e-11 };
-		
+
 		ShouldNotBeErr_Timeout({
 		w1->SetOutValue(AttachRRArrayCopy(d1,10));
 		RR_INTRUSIVE_PTR<RRArray<double> > in1;
@@ -1014,12 +994,12 @@ namespace RobotRaconteurTest
 		double d4[] = { -1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21, -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 };
 		ShouldNotBeErr_Timeout({
 		w2->SetOutValue(s2);
-		RR_INTRUSIVE_PTR<teststruct2> in2 = w2->GetInValue();		
+		RR_INTRUSIVE_PTR<teststruct2> in2 = w2->GetInValue();
 		ca<double>(in2->mydat,AttachRRArray(d4,10,false));
 		}, 500);
 
 		int32_t i4[] = { 2058500854, -611248192, 197490486, -517717939, -513450368, 296469979, 645365194, 2043654604, -1672941174, 710030901 };
-		
+
 		ShouldNotBeErr_Timeout({
 		w3->SetOutValue(a2);
 		RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > in3 = w3->GetInValue();
@@ -1036,7 +1016,7 @@ namespace RobotRaconteurTest
 		w1->Close();
 		//w2->Close();
 		w3->Close();
-			
+
 	}
 
 	void ServiceTestClient::w1_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > c, RR_INTRUSIVE_PTR<RRArray<double> > value, TimeSpec t)
@@ -1050,7 +1030,7 @@ namespace RobotRaconteurTest
 		w2_called=true;
 		we2.Set();
 	}
-	
+
 	void ServiceTestClient::w3_changed(RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > > > c, RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t> > value, TimeSpec t)
 	{
 		w3_called=true;
@@ -1088,18 +1068,18 @@ namespace RobotRaconteurTest
 	}
 
 	void ServiceTestClient::test_m2()
-	{		
+	{
 		if (r->get_m2()->DimCount() !=5) throw std::exception();
 		vector<uint64_t> m2_dims=r->get_m2()->Dimensions();
 		uint64_t m2_dimsa[]={10,10,10,10,10};
 		ca(m2_dims,vector<uint64_t>(m2_dimsa,m2_dimsa+5));
-		
+
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m1;//=MultiDimArrayTest::LoadDoubleArrayFromFile("../testdata/testmdarray1.bin");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m2;//=MultiDimArrayTest::LoadDoubleArrayFromFile("../testdata/testmdarray2.bin");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m3;//=MultiDimArrayTest::LoadDoubleArrayFromFile("../testdata/testmdarray3.bin");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m4;//=MultiDimArrayTest::LoadDoubleArrayFromFile("../testdata/testmdarray4.bin");
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m5;//=MultiDimArrayTest::LoadDoubleArrayFromFile("../testdata/testmdarray5.bin");
-		
+
 		uint64_t zeros[]={0,0,0,0,0};
 		vector<uint64_t> vzeros(zeros,zeros+5);
 		r->get_m2()->Write(vzeros,m1,vzeros,RobotRaconteur::RRArrayToVector<uint64_t>(m1->Dims));
@@ -1111,18 +1091,18 @@ namespace RobotRaconteurTest
 		r->get_m2()->Read(vzeros,m1_2,vzeros,RobotRaconteur::RRArrayToVector<uint64_t>(m1->Dims));
 		ca(m1->Dims,m1_2->Dims);
 		ca(m1->Array,m1_2->Array);
-		
+
 
 		uint64_t m1a[]={ 2, 2, 3, 3, 4 };
 		uint64_t m1b[]={ 0, 2, 0, 0, 0 };
 		uint64_t m1c[]={ 1, 5, 5, 2, 1 };
 		r->get_m2()->Write(vector<uint64_t>(m1a,m1a+5),m2,vector<uint64_t>(m1b,m1b+5),vector<uint64_t>(m1c,m1c+5));
-		
+
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m2_2=AllocateRRMultiDimArray<double>(AttachRRArray(tens,5,false),AllocateRRArray<double>(100000));
 		r->get_m2()->Read(vzeros,m2_2,vzeros,RobotRaconteur::RRArrayToVector<uint64_t>(m1->Dims));
 		ca(m2_2->Dims,m3->Dims);
 		ca(m2_2->Array,m3->Array);
-		
+
 		uint32_t m6a[]={2,2,1,1,10};
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m6=AllocateRRMultiDimArray<double>(AttachRRArray(m6a,5,false),AllocateRRArray<double>(40));
 		uint64_t m4a[]={ 4, 2, 2, 8, 0 };
@@ -1130,16 +1110,16 @@ namespace RobotRaconteurTest
 		uint64_t m4c[]= { 2, 2, 1, 1, 10 };
 		r->get_m2()->Read(vector<uint64_t>(m4a,m4a+5),m6,vector<uint64_t>(m4b,m4b+5),vector<uint64_t>(m4c,m4c+5));
 		ca(m4->Array,m6->Array);
-		
+
 		uint32_t m7a[]={ 4, 4, 4, 4, 10 };
 		RR_INTRUSIVE_PTR<RRMultiDimArray<double> > m7=AllocateRRMultiDimArray<double>(AttachRRArray(m7a,5,false),AllocateRRArray<double>(2560));
-		memset(m7->Array->data(),0,2560*sizeof(double));		
+		memset(m7->Array->data(),0,2560*sizeof(double));
 		uint64_t m5a[]={ 4, 2, 2, 8, 0 };
 		uint64_t m5b[]={ 2, 1,2, 1, 0 };
 		uint64_t m5c[]= { 2, 2, 1, 1, 10 };
 		r->get_m2()->Read(vector<uint64_t>(m5a,m5a+5),m7,vector<uint64_t>(m5b,m5b+5),vector<uint64_t>(m5c,m5c+5));
 		ca(m5->Array,m7->Array);
-		
+
 
 	}
 
@@ -1184,7 +1164,7 @@ namespace RobotRaconteurTest
 		uint32_t m7a[]={ 512, 512 };
 		RR_INTRUSIVE_PTR<RRMultiDimArray<uint8_t> > m7=AllocateRRMultiDimArray<uint8_t>(AttachRRArray(m7a,2,false),AllocateRRArray<uint8_t>(512*512));
 		memset(m7->Array->data(),0,512*512);
-		
+
 		uint64_t m5a[]={ 65,800 };
 		uint64_t m5b[]={ 100,230 };
 		uint64_t m5c[]= { 200,200 };
@@ -1193,7 +1173,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	
+
 	void ServiceTestClient::DisconnectService()
 	{
 		RobotRaconteurNode::s()->DisconnectService(r);
@@ -1212,7 +1192,7 @@ namespace RobotRaconteurTest
 		RR_SHARED_PTR<testroot> r2=rr_cast<testroot>(RobotRaconteurNode::s()->ConnectService(url,"testuser2",cred2));
 		r2->func3(2.2,3.3);
 		RobotRaconteurNode::s()->DisconnectService(r2);
-		
+
 		bool err=false;
 		RR_SHARED_PTR<testroot> r3;
 		try
@@ -1232,7 +1212,7 @@ namespace RobotRaconteurTest
 		}
 
 		if (!err) throw std::exception();
-		
+
 		RR_SHARED_PTR<testroot> r4;
 		try
 		{
@@ -1349,7 +1329,7 @@ namespace RobotRaconteurTest
 		r1_o->set_d1(d);
 		ShouldBeErr(r2_o->set_d1(d););
 		ShouldBeErr(r3_o->set_d1(d););
-		
+
 		//Test the lock override by testsuperpass
 		RR_INTRUSIVE_PTR<RRMap<string,RRValue> > cred5=AllocateEmptyRRMap<string,RRValue>();
 		cred5->insert(make_pair("password",stringToRRArray("superpass1")));
@@ -1408,7 +1388,7 @@ namespace RobotRaconteurTest
 
 		//Start thread and run it
 		t=boost::thread(boost::bind(&ServiceTestClient::test_monitor_lock_thread,this));
-		
+
 
 		t1=true;
 		if (!e1.WaitOne(1000)) throw std::exception();
@@ -1481,13 +1461,13 @@ namespace RobotRaconteurTest
 	{
 		ASYNC_TEST_CALL(
 			RR_SHARED_PTR<async_testroot> r1=rr_cast<async_testroot>(r);
-			r1->async_get_d2(boost::bind(&ServiceTestClient::TestAsync2,this,r1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));			
+			r1->async_get_d2(boost::bind(&ServiceTestClient::TestAsync2,this,r1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		);
 	}
 
 	void ServiceTestClient::TestAsync2(RR_SHARED_PTR<async_testroot> r, RR_INTRUSIVE_PTR<RRArray<double> > ret, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
-		if (exp) 
+		if (exp)
 		{
 			TestAsync_err(exp);
 			return;
@@ -1553,12 +1533,12 @@ namespace RobotRaconteurTest
 
 		);
 	}
-	
+
 	void ServiceTestClient::TestAsync8(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		double d1[]={ 1, 2, 3, 4 };
 		ASYNC_TEST_CALL(
-		
+
 		e1->AsyncSendPacket(AttachRRArrayCopy(d1,4),boost::bind(&ServiceTestClient::TestAsync9,this,r,e1,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)));
 		)
 	}
@@ -1572,7 +1552,7 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient::TestAsync10(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<PipeEndpoint<RR_INTRUSIVE_PTR<RRArray<double> > > > e1, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
-		ASYNC_TEST_CALL(		
+		ASYNC_TEST_CALL(
 		r->get_w1()->AsyncConnect(boost::bind(&ServiceTestClient::TestAsync11,this,r,RR_BOOST_PLACEHOLDERS(_1),RR_BOOST_PLACEHOLDERS(_2)))
 		);
 	}
@@ -1580,7 +1560,7 @@ namespace RobotRaconteurTest
 	void ServiceTestClient::TestAsync11(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<WireConnection<RR_INTRUSIVE_PTR<RRArray<double> > > > w1, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
 		double d0[]={0.0};
-		ASYNC_TEST_CALL(		
+		ASYNC_TEST_CALL(
 		w1->SetOutValue(AttachRRArrayCopy(d0,1));
 		w1->AsyncClose(boost::bind(&ServiceTestClient::TestAsync12,this,r,w1,RR_BOOST_PLACEHOLDERS(_1)));
 		);
@@ -1604,7 +1584,7 @@ namespace RobotRaconteurTest
 
 	void ServiceTestClient::TestAsync14(RR_SHARED_PTR<testroot> r, RR_SHARED_PTR<std::string> res, RR_SHARED_PTR<RobotRaconteurException> exp)
 	{
-		ASYNC_TEST_CALL(	
+		ASYNC_TEST_CALL(
 			if (!res) throw std::runtime_error("");
 		if (*res!="OK") throw std::runtime_error("");
 		RobotRaconteurNode::s()->AsyncDisconnectService(rr_cast<RRObject>(r),boost::bind(&ServiceTestClient::TestAsync15,this));
@@ -1636,8 +1616,8 @@ namespace RobotRaconteurTest
 
 		IOContextThreadPool_AsyncResultAdapter<void> disconnect_res(io_context);
 		RobotRaconteurNode::s()->AsyncDisconnectService(c1,disconnect_res);
-		disconnect_res.GetResult();		
+		disconnect_res.GetResult();
 	}
 
-	
+
 }

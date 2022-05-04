@@ -44,16 +44,16 @@ namespace test
         bool dims_eq;
         bool array_eq;
         {
-            SCOPED_TRACE("multidimarray dims")
+            SCOPED_TRACE("multidimarray dims");
             dims_eq = RRArrayNear(a1->Dims,a2->Dims);
-            EXPECT_TRUE(dims_eq)
+            EXPECT_TRUE(dims_eq);
         }
         {
-            SCOPED_TRACE("multidimarray data")
+            SCOPED_TRACE("multidimarray data");
             array_eq = RRArrayNear(a1->Array,a2->Array);
-            EXPECT_TRUE(array_eq)
+            EXPECT_TRUE(array_eq);
         }
-        return dims_eq && array_eq        
+        return dims_eq && array_eq;        
     }
 
     template <typename T>

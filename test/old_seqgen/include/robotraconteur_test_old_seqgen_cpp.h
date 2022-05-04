@@ -11,6 +11,9 @@ namespace test
 {
     ROBOTRACONTEUR_TEST_OLD_SEQGEN_API double OldDouble(const std::string& name);
     ROBOTRACONTEUR_TEST_OLD_SEQGEN_API RR_INTRUSIVE_PTR<RRArray<double> > OldDoubles(const std::string& name);
+    ROBOTRACONTEUR_TEST_OLD_SEQGEN_API RR_INTRUSIVE_PTR<RRMultiDimArray<double> > OldMDoubles(const std::string& name);
+
+    ROBOTRACONTEUR_TEST_OLD_SEQGEN_API RR_INTRUSIVE_PTR<RRArray<uint32_t> > OldUInt32s(const std::string& name);
 }
 }
 
