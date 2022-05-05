@@ -1,3 +1,6 @@
+
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/macros.cmake)
+
 ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS 
 	com.robotraconteur.testing.TestService1.robdef 
 	com.robotraconteur.testing.TestService2.robdef 
@@ -8,47 +11,12 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS
 	INCLUDE_DIRS ${ROBOTRACONTEUR_TEST_ROBDEF_DIR}
 	)
 
-RR_TEST_ADD_EXECUTABLE(robotraconteur_service_test
-    SRC service_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS}
-    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main    
-)
-target_include_directories(robotraconteur_service_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-if (MSVC)
-	target_compile_options(robotraconteur_service_test PRIVATE "/bigobj")
-endif()
+RR_SERVICE_TEST_ADD_TEST(service SRC service_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
 
-RR_TEST_ADD_EXECUTABLE(robotraconteur_single_thread_service_test
-    SRC single_thread_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS}
-    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main    
-)
-target_include_directories(robotraconteur_single_thread_service_test PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-if (MSVC)
-	target_compile_options(robotraconteur_single_thread_service_test PRIVATE "/bigobj")
-endif()
+RR_SERVICE_TEST_ADD_TEST(single_thread_service SRC single_thread_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
 
-RR_TEST_ADD_EXECUTABLE(robotraconteur_service_test2
-    SRC service_test2.cpp ServiceTestClient2.cpp ServiceTest2.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS}
-    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main    
-)
-target_include_directories(robotraconteur_service_test2 PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-if (MSVC)
-	target_compile_options(robotraconteur_service_test2 PRIVATE "/bigobj")
-endif()
+RR_SERVICE_TEST_ADD_TEST(service2 SRC service_test2.cpp ServiceTestClient2.cpp ServiceTest2.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
 
-RR_TEST_ADD_EXECUTABLE(robotraconteur_service_test3
-    SRC service_test3.cpp ServiceTestClient3.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS}
-    DEPS RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main    
-)
-target_include_directories(robotraconteur_service_test3 PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-if (MSVC)
-	target_compile_options(robotraconteur_service_test3 PRIVATE "/bigobj")
-endif()
+RR_SERVICE_TEST_ADD_TEST(service3 SRC service_test3.cpp ServiceTestClient3.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
 
-add_executable(robotraconteur_test_server
-    test_server.cpp ServiceTest.cpp ServiceTest2.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
-target_link_libraries(robotraconteur_test_server RobotRaconteurCore robotraconteur_test_cpp_common robotraconteur_test_lfsr GTest::gtest_main)
-target_include_directories(robotraconteur_test_server PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-if (MSVC)
-	target_compile_options(robotraconteur_test_server PRIVATE "/bigobj")
-endif()
-RR_SET_TEST_TARGET_DIRS(robotraconteur_test_server bin lib)
+RR_SERVICE_TEST_ADD_EXE(server SRC test_server.cpp ServiceTest.cpp ServiceTest2.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp)
