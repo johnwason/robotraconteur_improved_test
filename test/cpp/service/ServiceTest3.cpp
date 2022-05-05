@@ -2,10 +2,14 @@
 
 namespace RobotRaconteurTest
 {
-    void RobotRaconteurTestService3Support::RegisterServices()
+    void RobotRaconteurTestService3Support::RegisterServices(RR_SHARED_PTR<RobotRaconteurNode> node)
 	{
+        if (!node)
+        {
+            node = RobotRaconteurNode::sp();
+        }
 		testservice3 = RR_MAKE_SHARED<asynctestroot_impl>();
-		RR_SHARED_PTR<ServerContext> c = RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService3", "com.robotraconteur.testing.TestService5", testservice3);
+		RR_SHARED_PTR<ServerContext> c = node->RegisterService("RobotRaconteurTestService3", "com.robotraconteur.testing.TestService5", testservice3);
 	}
 
 	void RobotRaconteurTestService3Support::UnregisterServices()

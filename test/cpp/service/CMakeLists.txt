@@ -11,12 +11,12 @@ ROBOTRACONTEUR_GENERATE_THUNK(RR_THUNK_SRCS RR_THUNK_HDRS
 	INCLUDE_DIRS ${ROBOTRACONTEUR_TEST_ROBDEF_DIR}
 	)
 
-RR_SERVICE_TEST_ADD_TEST(service SRC service_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
+RR_SERVICE_TEST_ADD_TEST(service SRC service_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ServiceTest.cpp ServiceTest2.cpp ServiceTest3.cpp ${RR_THUNK_SRCS})
 
-RR_SERVICE_TEST_ADD_TEST(single_thread_service SRC single_thread_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
+RR_SERVICE_TEST_ADD_TEST(single_thread_service SRC single_thread_test.cpp ServiceTestClient.cpp CompareArray.cpp service_test_utils.cpp ServiceTest.cpp ServiceTest2.cpp ServiceTest3.cpp ${RR_THUNK_SRCS})
 
-RR_SERVICE_TEST_ADD_TEST(service2 SRC service_test2.cpp ServiceTestClient2.cpp ServiceTest2.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
+RR_SERVICE_TEST_ADD_TEST(service2 SRC service_test2.cpp ServiceTestClient2.cpp ServiceTest2.cpp CompareArray.cpp service_test_utils.cpp ServiceTest.cpp ServiceTest3.cpp ${RR_THUNK_SRCS})
 
-RR_SERVICE_TEST_ADD_TEST(service3 SRC service_test3.cpp ServiceTestClient3.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp ${RR_THUNK_SRCS})
+RR_SERVICE_TEST_ADD_TEST(service3 SRC service_test3.cpp ServiceTestClient3.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp ServiceTest.cpp ServiceTest2.cpp ${RR_THUNK_SRCS})
 
 RR_SERVICE_TEST_ADD_EXE(server SRC test_server.cpp ServiceTest.cpp ServiceTest2.cpp ServiceTest3.cpp CompareArray.cpp service_test_utils.cpp)

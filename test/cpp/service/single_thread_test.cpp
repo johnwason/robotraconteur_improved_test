@@ -9,13 +9,14 @@
 
 #include "ServiceTestClient.h"
 #include "robotraconteur_generated.h"
+#include "service_test_utils.h"
 
 using namespace RobotRaconteur;
-//using namespace RobotRaconteur::test;
+using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
 
-static std::string service_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService";
+static std::string service_url;
 
 
 static RR_BOOST_ASIO_IO_CONTEXT asio_io_context;
@@ -41,6 +42,8 @@ TEST(RobotRaconteurServiceSingleThread,SingleThreadTest)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
+    TestServerNodeConfig server("unit_service_test_st");
+    service_url = server.GetServiceURL("RobotRaconteurTestService");
 
     int ret = RUN_ALL_TESTS();
 

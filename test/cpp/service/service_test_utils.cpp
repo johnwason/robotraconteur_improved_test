@@ -1,7 +1,17 @@
 #include "service_test_utils.h"
 
 #include <boost/algorithm/string.hpp>
+#include <RobotRaconteur/RobotRaconteurNode.h>
+#include <RobotRaconteur/NodeSetup.h>
+#include "robotraconteur_generated.h"
 
+#include "ServiceTest.h"
+#include "ServiceTest2.h"
+#include "ServiceTest3.h"
+
+
+using namespace RobotRaconteur;
+using namespace RobotRaconteurTest;
 namespace RobotRaconteur
 {
 namespace test
@@ -84,6 +94,67 @@ ThrowIfFailures::~ThrowIfFailures()
     testing::TestEventListeners& listeners = testing::UnitTest::GetInstance()->listeners();
     listeners.Release(gtest_listener.get());
 }
+
+
+
+TestServerNodeConfig::TestServerNodeConfig(const std::string& nodename)
+{
+    char* node_env = std::getenv("ROBOTRACONTEUR_TEST_SERVER_URL");
+    if (node_env)
+    {
+        node_endpoint_url = std::string(node_env);
+    }
+    else
+    {
+        node = RR_MAKE_SHARED<RobotRaconteurNode>();
+        node->Init();
+        server = RR_MAKE_SHARED<ServerNodeSetup>(node,ROBOTRACONTEUR_SERVICE_TYPES,nodename,0);
+
+        RR_SHARED_PTR<TcpTransport> c = server->GetTcpTransport();
+
+        RobotRaconteurTestServiceSupport s;
+        s.RegisterServices(c,node);
+
+        RobotRaconteurTestService2Support s2;
+        s2.RegisterServices(c,node);
+
+        RobotRaconteurTestService3Support s3;
+        s3.RegisterServices(node);
+    }
+}
+
+std::string TestServerNodeConfig::GetServiceURL(const std::string& service_name)
+{
+    if (!server)
+    {
+        if (boost::contains(service_name,"?"))
+        {
+            return node_endpoint_url + "&service=" + service_name;
+        }
+        else
+        {
+            return node_endpoint_url + "?service=" + service_name;
+        }
+    }
+    else
+    {
+        int32_t port = server->GetTcpTransport()->GetListenPort();
+        return "rr+tcp://localhost:" + boost::lexical_cast<std::string>(port) + "?service=" + service_name;
+    }
+}
+
+void TestServerNodeConfig::Shutdown()
+{
+    server.reset();
+}
+
+TestServerNodeConfig::~TestServerNodeConfig()
+{   
+    server.reset();
+}
+
+    
+
 
 }
 }

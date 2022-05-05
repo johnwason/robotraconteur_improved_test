@@ -6,13 +6,14 @@
 
 #include "ServiceTestClient2.h"
 #include "robotraconteur_generated.h"
+#include "service_test_utils.h"
 
 using namespace RobotRaconteur;
-//using namespace RobotRaconteur::test;
+using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
 
-static std::string service2_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService2";
+static std::string service2_url;
 
 
 TEST(RobotRaconteurService,WirePeekPokeTest)
@@ -148,6 +149,9 @@ TEST(RobotRaconteurService,ExceptionParamsTest)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
+
+    TestServerNodeConfig server("unit_service_test2");
+    service2_url = server.GetServiceURL("RobotRaconteurTestService2");
 
     ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
 

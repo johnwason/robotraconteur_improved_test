@@ -11,10 +11,14 @@ using namespace RobotRaconteur::test;
 namespace RobotRaconteurTest
 {
 
-	void RobotRaconteurTestService2Support::RegisterServices(RR_SHARED_PTR<TcpTransport> transport)
+	void RobotRaconteurTestService2Support::RegisterServices(RR_SHARED_PTR<TcpTransport> transport, RR_SHARED_PTR<RobotRaconteurNode> node)
 	{
+		if (!node)
+		{
+			node = RobotRaconteurNode::sp();
+		}
 		testservice2 = RR_MAKE_SHARED<testroot3_impl>();
-		RR_SHARED_PTR<ServerContext> c = RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
+		RR_SHARED_PTR<ServerContext> c = node->RegisterService("RobotRaconteurTestService2", "com.robotraconteur.testing.TestService3", testservice2);
 		c->RequestObjectLock("RobotRaconteurTestService2.nolock_test", "server");
 	}
 
@@ -67,7 +71,7 @@ namespace RobotRaconteurTest
 	{
 		testroot3_default_impl::set_peekwire(value);
 				
-		peekwire_timer = RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
+		peekwire_timer = ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(boost::posix_time::milliseconds(100), boost::bind(&testroot3_impl::peekwire_timer_handler, shared_from_this(), RR_BOOST_PLACEHOLDERS(_1)));
 		peekwire_timer->Start();
 		rrvar_peekwire->SetOutValue(56295674);
 	}

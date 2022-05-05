@@ -13,7 +13,7 @@ namespace RobotRaconteurTest
     class RobotRaconteurTestService3Support
 	{
 	public:
-		void RegisterServices();
+		void RegisterServices(RR_SHARED_PTR<RobotRaconteurNode> node=RR_SHARED_PTR<RobotRaconteurNode>());
 		void UnregisterServices();
 	protected:
 

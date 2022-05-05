@@ -13,7 +13,7 @@ namespace RobotRaconteurTest
 	class RobotRaconteurTestService2Support
 	{
 	public:
-		void RegisterServices(RR_SHARED_PTR<TcpTransport> transport);
+		void RegisterServices(RR_SHARED_PTR<TcpTransport> transport, RR_SHARED_PTR<RobotRaconteurNode> node=RR_SHARED_PTR<RobotRaconteurNode>());
 		void UnregisterServices();
 	protected:
 

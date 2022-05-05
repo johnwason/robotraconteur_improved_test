@@ -23,7 +23,7 @@ public:
 	RR_SHARED_PTR<RobotRaconteurTest_testroot> testservice;
 	RR_SHARED_PTR<RobotRaconteurTest_testroot> testservice_auth;
 
-	void RegisterServices(RR_SHARED_PTR<TcpTransport> transport);
+	void RegisterServices(RR_SHARED_PTR<TcpTransport> transport, RR_SHARED_PTR<RobotRaconteurNode> node=RR_SHARED_PTR<RobotRaconteurNode>());
 	void RegisterSecureServices(RR_SHARED_PTR<TcpTransport> tcptransport, const std::vector<NodeID>& allowed_clients);
 
 	void UnregisterServices();

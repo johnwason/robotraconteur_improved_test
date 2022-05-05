@@ -1,5 +1,8 @@
 #include "array_compare.h"
 
+#include <RobotRaconteur/RobotRaconteurNode.h>
+#include <RobotRaconteur/NodeSetup.h>
+
 #pragma once
 
 namespace RobotRaconteur
@@ -31,6 +34,19 @@ public:
     virtual ~ThrowIfFailures();
 
     RR_SHARED_PTR<GTestThreadLocalListener> gtest_listener;
+};
+
+class TestServerNodeConfig
+{
+public:
+    TestServerNodeConfig(const std::string& nodename);
+    std::string GetServiceURL(const std::string& service_name);
+    void Shutdown();
+    virtual ~TestServerNodeConfig();
+
+    RR_SHARED_PTR<RobotRaconteur::ServerNodeSetup> server;
+    RR_SHARED_PTR<RobotRaconteur::RobotRaconteurNode> node;
+    std::string node_endpoint_url;
 };
 
 }

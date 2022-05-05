@@ -9,14 +9,15 @@
 
 #include "ServiceTestClient.h"
 #include "robotraconteur_generated.h"
+#include "service_test_utils.h"
 
 using namespace RobotRaconteur;
-//using namespace RobotRaconteur::test;
+using namespace RobotRaconteur::test;
 using namespace RobotRaconteurTest;
 
 
-static std::string service_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService";
-static std::string service_auth_url = "rr+tcp://127.0.0.1:22222?service=RobotRaconteurTestService_auth";
+static std::string service_url;
+static std::string service_auth_url;
 
 TEST(RobotRaconteurService,MinimalTest)
 {
@@ -146,6 +147,9 @@ TEST(RobotRaconteurService,AsyncTest)
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);
+    TestServerNodeConfig server("unit_service_test");
+    service_url = server.GetServiceURL("RobotRaconteurTestService");
+    service_auth_url = server.GetServiceURL("RobotRaconteurTestService_auth");
 
     ClientNodeSetup setup(ROBOTRACONTEUR_SERVICE_TYPES,argc,argv);
 

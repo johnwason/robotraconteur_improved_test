@@ -1366,7 +1366,7 @@ void RobotRaconteurTest_testroot::set_broadcastpipe(RR_SHARED_PTR<RobotRaconteur
 	broadcastpipe->Init(value,3);
 		
 	RR_WEAK_PTR<RobotRaconteurTest_testroot> w=shared_from_this();
-	broadcastpipe_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastpipe_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
+	broadcastpipe_timer=ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastpipe_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
 	broadcastpipe_timer->Start();
 }
 
@@ -1538,7 +1538,7 @@ void RobotRaconteurTest_testroot::set_broadcastwire(RR_SHARED_PTR<RobotRaconteur
 	broadcastwire->Init(value);
 		
 	RR_WEAK_PTR<RobotRaconteurTest_testroot> w=shared_from_this();
-	broadcastwire_timer=RobotRaconteurNode::s()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastwire_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
+	broadcastwire_timer=ServerContext::GetCurrentServerContext()->GetNode()->CreateTimer(boost::posix_time::milliseconds(100),boost::bind(&RobotRaconteurTest_testroot::broadcastwire_timer_handler,w,RR_BOOST_PLACEHOLDERS(_1)));
 	broadcastwire_timer->Start();
 }
 
@@ -1752,38 +1752,38 @@ double sub3_impl::add(double d)
 
 void sub3_impl::async_get_ind(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {	
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,ind,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,ind,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 void sub3_impl::async_set_ind(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,RR_MAKE_SHARED<ServiceException>("Read only property")));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,RR_MAKE_SHARED<ServiceException>("Read only property")));
 }
 
 void sub3_impl::async_get_data2(boost::function<void (const std::string&,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,data2,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,data2,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 
 void sub3_impl::async_set_data2(const std::string& value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 	data2=value;
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 
 void sub3_impl::async_get_data3(boost::function<void (double,RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,data3,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,data3,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 void sub3_impl::async_set_data3(double value,boost::function<void (RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 	data3=value;
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 
 void sub3_impl::async_add(double d,boost::function<void (double, RR_SHARED_PTR<RobotRaconteur::RobotRaconteurException>) > rr_handler, int32_t rr_timeout)
 {
 	double res=d+42;
-	RobotRaconteurNode::s()->GetThreadPool()->Post(boost::bind(rr_handler,res,RR_SHARED_PTR<RobotRaconteurException>()));
+	ServerContext::GetCurrentServerContext()->GetNode()->GetThreadPool()->Post(boost::bind(rr_handler,res,RR_SHARED_PTR<RobotRaconteurException>()));
 }
 
 
@@ -1796,12 +1796,16 @@ double TestService2SubObj::add_val(double v)
 
 //support
 
-void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTransport> tcptransport)
+void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTransport> tcptransport, RR_SHARED_PTR<RobotRaconteurNode> node)
 {
+	if (!node)
+	{
+		node = RobotRaconteurNode::sp();
+	}
 	testservice=RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
 	testservice_auth=RR_MAKE_SHARED<RobotRaconteurTest_testroot>(tcptransport);
 
-	RR_SHARED_PTR<ServerContext> c=RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService", "com.robotraconteur.testing.TestService1", testservice);
+	RR_SHARED_PTR<ServerContext> c=node->RegisterService("RobotRaconteurTestService", "com.robotraconteur.testing.TestService1", testservice);
 
 	std::map<std::string, RR_INTRUSIVE_PTR<RRValue> > m;
 	m.insert(make_pair("test",stringToRRArray("This is a test attribute")));
@@ -1817,7 +1821,7 @@ void RobotRaconteurTestServiceSupport::RegisterServices(RR_SHARED_PTR<TcpTranspo
 	
 	RR_SHARED_PTR<ServiceSecurityPolicy> s=RR_MAKE_SHARED<ServiceSecurityPolicy>(p,policies);
 
-	RobotRaconteurNode::s()->RegisterService("RobotRaconteurTestService_auth", "com.robotraconteur.testing.TestService1", testservice_auth,s);
+	node->RegisterService("RobotRaconteurTestService_auth", "com.robotraconteur.testing.TestService1", testservice_auth,s);
 
 }
 
