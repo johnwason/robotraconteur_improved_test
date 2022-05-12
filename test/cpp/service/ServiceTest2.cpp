@@ -67,7 +67,7 @@ namespace RobotRaconteurTest
 
 	}
 
-	void testroot3_impl::set_peekwire(RR_SHARED_PTR<Wire<int32_t > > value)
+	void testroot3_impl::set_peekwire(const RR_SHARED_PTR<Wire<int32_t > >& value)
 	{
 		testroot3_default_impl::set_peekwire(value);
 				
@@ -104,18 +104,9 @@ namespace RobotRaconteurTest
 	{
 		return unreliable1;
 	}
-	void testroot3_impl::set_unreliable1(RR_SHARED_PTR<Pipe<int32_t > > value)
+	void testroot3_impl::set_unreliable1(const RR_SHARED_PTR<Pipe<int32_t > >& value)
 	{
 		unreliable1 = value;
-	}
-
-	RR_SHARED_PTR<Pipe<int32_t > > testroot3_impl::get_unreliable2()
-	{
-		return unreliable2;
-	}
-	void testroot3_impl::set_unreliable2(RR_SHARED_PTR<Pipe<int32_t > > value)
-	{
-		unreliable2 = value;
 	}
 
 	RR_SHARED_PTR<ArrayMemory<double > > testroot3_impl::get_readmem()
@@ -170,7 +161,7 @@ namespace RobotRaconteurTest
 	{
 		return ServiceTest2_fill_teststruct3(16483675);
 	}
-	void testroot3_impl::set_teststruct3_prop(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3 > value)
+	void testroot3_impl::set_teststruct3_prop(const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3 >& value)
 	{
 		ThrowIfFailures thrower;
 		ServiceTest2_verify_teststruct3(value,858362);
@@ -327,7 +318,7 @@ namespace RobotRaconteurTest
 	{
 		return ServiceTest2_fill_transform_array(8, 837512);
 	}
-	void testroot3_impl::set_testnamedarray3(RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > value)
+	void testroot3_impl::set_testnamedarray3(const RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> >& value)
 	{
 		ThrowIfFailures thrower;
 		ServiceTest2_verify_transform_array(value, 6, 19274);
@@ -338,7 +329,7 @@ namespace RobotRaconteurTest
 	{
 		return ServiceTest2_fill_transform_multidimarray(7, 2, 66134);
 	}
-	void testroot3_impl::set_testnamedarray4(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+	void testroot3_impl::set_testnamedarray4(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >& value)
 	{
 		ThrowIfFailures thrower;
 		ServiceTest2_verify_transform_multidimarray(value, 5, 2, 6385);
@@ -349,7 +340,7 @@ namespace RobotRaconteurTest
 	{
 		return ServiceTest2_fill_transform_multidimarray(3, 2, 773142);
 	}
-	void testroot3_impl::set_testnamedarray5(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > value)
+	void testroot3_impl::set_testnamedarray5(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> >& value)
 	{
 		ThrowIfFailures thrower;
 		ServiceTest2_verify_transform_multidimarray(value, 3, 2, 7732);
@@ -383,7 +374,7 @@ namespace RobotRaconteurTest
 		return AttachRRArrayCopy<cdouble>((cdouble*)c2_1_1, 16);
 
 	}
-	void testroot3_impl::set_c2(RR_INTRUSIVE_PTR<RRArray<cdouble > > value)
+	void testroot3_impl::set_c2(const RR_INTRUSIVE_PTR<RRArray<cdouble > >& value)
 	{
 		ThrowIfFailures thrower;
 		double c2_2_1[] = { 4.925965e-03, 5.695254e+13, -4.576890e-14, -6.056342e-07, -4.918571e-08, -1.940684e-10, 1.549104e-02, -1.954145e+04, -2.499019e-16, 4.010614e+09, -1.906811e-08, 3.297924e-10, 2.742399e-02, -4.372839e-01, -3.093171e-10, 4.311755e-01, -2.218220e-14, 5.399758e+10, 3.360304e+17, 1.340681e-18, -4.441140e+11, -1.845055e-09, -3.074586e-10, -1.754926e+01, -2.766799e+04, -2.307577e+10, 2.754875e+14, 1.179639e+15, 6.976204e-10, 1.901856e+08, -3.824351e-02, -1.414167e+08 };
@@ -399,7 +390,7 @@ namespace RobotRaconteurTest
 		double c3_1_2[] = { 5.524802e+18, -2.443857e-05, 3.737932e-02, -4.883553e-03, -1.184347e+12, 4.537366e-08, -4.567913e-01, -1.683542e+15, -1.676517e+00, -8.911085e+12, -2.537376e-17, 1.835687e-10, -9.366069e-22, -5.426323e-12, -7.820969e-10, -1.061541e+12, -3.660854e-12, -4.969930e-03, 1.988428e+07, 1.860782e-16 };
 		return AllocateRRMultiDimArray<cdouble>(AttachRRArrayCopy(c3_1_1, 2), AttachRRArrayCopy((cdouble*)c3_1_2, 10));
 	}
-	void testroot3_impl::set_c3(RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble > > value)
+	void testroot3_impl::set_c3(const RR_INTRUSIVE_PTR<RRMultiDimArray<cdouble > >& value)
 	{
 		ThrowIfFailures thrower;
 		uint32_t c3_2_1[] = { 3,4 };
@@ -418,7 +409,7 @@ namespace RobotRaconteurTest
 		c5_1->push_back(AttachRRArrayCopy((cdouble*)c5_1_1, 8));
 		return c5_1;		
 	}
-	void testroot3_impl::set_c5(RR_INTRUSIVE_PTR<RRList<RRArray<cdouble >  > > value)
+	void testroot3_impl::set_c5(const RR_INTRUSIVE_PTR<RRList<RRArray<cdouble >  > >& value)
 	{
 		ThrowIfFailures thrower;
 		EXPECT_TRUE(value);
@@ -444,7 +435,7 @@ namespace RobotRaconteurTest
 		float c8_1_1[] = { -3.153395e-09, 3.829492e-02, -2.665239e+12, 1.592927e-03, 3.188444e+06, -3.595015e-11, 2.973887e-18, -2.189921e+17, 1.651567e+10, 1.095838e+05, 3.865249e-02, 4.725510e+10, -2.334376e+03, 3.744977e-05, -1.050821e+02, 1.122660e-22, 3.501520e-18, -2.991601e-17, 6.039622e-17, 4.778095e-07, -4.793136e-05, 3.096513e+19, 2.476004e+18, 1.296297e-03, 2.165336e-13, 4.834427e+06, 4.675370e-01, -2.942290e-12, -2.090883e-19, 6.674942e+07, -4.809047e-10, -4.911772e-13 };
 		return AttachRRArrayCopy<cfloat>((cfloat*)c8_1_1, 16);
 	}
-	void testroot3_impl::set_c8(RR_INTRUSIVE_PTR<RRArray<cfloat > > value)
+	void testroot3_impl::set_c8(const RR_INTRUSIVE_PTR<RRArray<cfloat > >& value)
 	{
 		ThrowIfFailures thrower;
 		float c8_2_1[] = { 1.324498e+06, 1.341746e-04, 4.292993e-04, -3.844509e+15, -3.804802e+10, 3.785305e-12, 2.628285e-19, -1.664089e+15, -4.246472e-10, -3.334943e+03, -3.305796e-01, 1.878648e-03, 1.420880e-05, -3.024657e+14, 2.227031e-21, 2.044653e+17, 9.753609e-20, -6.581817e-03, 3.271063e-03, -1.726081e+06, -1.614502e-06, -2.641638e-19, -2.977317e+07, -1.278224e+03, -1.760207e-05, -4.877944e-07, -2.171524e+02, 1.620645e+01, -4.334168e-02, 1.871011e-09, -3.066163e+06, -3.533662e+07 };
@@ -460,7 +451,7 @@ namespace RobotRaconteurTest
 
 		return AllocateRRMultiDimArray<cfloat>(AttachRRArrayCopy(c9_1_1, 2), AttachRRArrayCopy((cfloat*)c9_1_2, 8));
 	}
-	void testroot3_impl::set_c9(RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat > > value)
+	void testroot3_impl::set_c9(const RR_INTRUSIVE_PTR<RRMultiDimArray<cfloat > >& value)
 	{
 		ThrowIfFailures thrower;
 		uint32_t c9_2_1[] = { 2,2,2 };
@@ -502,7 +493,7 @@ namespace RobotRaconteurTest
 		rr_bool v[] = { 1,0,1,1,0,1,0 };
 		return AttachRRArrayCopy<rr_bool>(v, 7);
 	}
-	void testroot3_impl::set_b2(RR_INTRUSIVE_PTR<RRArray<rr_bool > > value)
+	void testroot3_impl::set_b2(const RR_INTRUSIVE_PTR<RRArray<rr_bool > >& value)
 	{
 		ThrowIfFailures thrower;
 		EXPECT_EQ(value->size(), 8);
@@ -526,7 +517,7 @@ namespace RobotRaconteurTest
 
 		return AllocateRRMultiDimArray(AttachRRArrayCopy(dims, 2), AttachRRArrayCopy(v, 4));		
 	}
-	void testroot3_impl::set_b3(RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool > > value)
+	void testroot3_impl::set_b3(const RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool > >& value)
 	{
 		ThrowIfFailures thrower;
 		EXPECT_TRUE(value);
@@ -546,7 +537,7 @@ namespace RobotRaconteurTest
 		o->push_back(ScalarToRRArray<rr_bool>(1));
 		return o;		
 	}
-	void testroot3_impl::set_b4(RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > value)
+	void testroot3_impl::set_b4(const RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > >& value)
 	{
 		ThrowIfFailures thrower;
 		EXPECT_TRUE(value);
@@ -564,7 +555,7 @@ namespace RobotRaconteurTest
 		o->push_back(AttachRRArrayCopy(v,4));
 		return o;
 	}
-	void testroot3_impl::set_b5(RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > > value)
+	void testroot3_impl::set_b5(const RR_INTRUSIVE_PTR<RRList<RRArray<rr_bool >  > >& value)
 	{
 		ThrowIfFailures thrower;
 		EXPECT_TRUE(value);
@@ -587,7 +578,7 @@ namespace RobotRaconteurTest
 		o->push_back(AllocateRRMultiDimArray(AttachRRArrayCopy(dims, 2), AttachRRArrayCopy(v, 4)));
 		return o;
 	}
-	void testroot3_impl::set_b6(RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool >  > > value)
+	void testroot3_impl::set_b6(const RR_INTRUSIVE_PTR<RRList<RRMultiDimArray<rr_bool >  > >& value)
 	{
 		ThrowIfFailures thrower;
 		RR_INTRUSIVE_PTR<RRMultiDimArray<rr_bool > > value1;
@@ -892,7 +883,7 @@ namespace RobotRaconteurTest
 
 		return o;
 	}
-	void ServiceTest2_verify_teststruct3(RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> v, uint32_t seed)
+	void ServiceTest2_verify_teststruct3(const RR_INTRUSIVE_PTR<com::robotraconteur::testing::TestService3::teststruct3> v, uint32_t seed)
 	{
 		ServiceTest2_test_sequence_gen gen(seed);
 
@@ -1006,7 +997,7 @@ namespace RobotRaconteurTest
 		return o;
 	}
 
-	void ServiceTest2_verify_testpod1_array(RR_INTRUSIVE_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t s, uint32_t seed)
+	void ServiceTest2_verify_testpod1_array(const RR_INTRUSIVE_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t s, uint32_t seed)
 	{
 		ASSERT_TRUE(v);
 
@@ -1030,16 +1021,16 @@ namespace RobotRaconteurTest
 		o->PodArray = ServiceTest2_fill_testpod1_array(m*n, seed);
 		return o;
 	}
-	void ServiceTest2_verify_testpod1_multidimarray(RR_INTRUSIVE_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t m, size_t n, uint32_t seed)
+	void ServiceTest2_verify_testpod1_multidimarray(const RR_INTRUSIVE_PTR<RRPodMultiDimArray<com::robotraconteur::testing::TestService3::testpod1> > v, size_t m, size_t n, uint32_t seed)
 	{
 		ASSERT_TRUE(v);
-		ASSERT_TRUE(v->Dims->size(), 2);
+		ASSERT_EQ(v->Dims->size(), 2);
 		ASSERT_EQ((*v->Dims)[0], m);
 		ASSERT_EQ((*v->Dims)[1], n);
 		ServiceTest2_verify_testpod1_array(v->PodArray, m*n, seed);
 	}
 
-	void ServiceTest2_verify_testpod1_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
+	void ServiceTest2_verify_testpod1_multidimarray(const RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
 	{
 		RR_INTRUSIVE_PTR<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> > v1 = RR_DYNAMIC_POINTER_CAST<RRPodArray<com::robotraconteur::testing::TestService3::testpod1> >(v);
 		if (v1 && n == 1)
@@ -1081,7 +1072,7 @@ namespace RobotRaconteurTest
 		return o;
 	}
 
-	void ServiceTest2_verify_transform_array(RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > v, size_t s, uint32_t seed)
+	void ServiceTest2_verify_transform_array(const RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > v, size_t s, uint32_t seed)
 	{
 		ASSERT_TRUE(v);
 
@@ -1106,7 +1097,7 @@ namespace RobotRaconteurTest
 		return o;
 	}
 
-	void ServiceTest2_verify_transform_multidimarray(RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > v, size_t m, size_t n, uint32_t seed)
+	void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRNamedMultiDimArray<com::robotraconteur::testing::TestService3::transform> > v, size_t m, size_t n, uint32_t seed)
 	{
 		ASSERT_TRUE(v);
 		ASSERT_EQ(v->Dims->size(), 2);
@@ -1115,7 +1106,7 @@ namespace RobotRaconteurTest
 		ServiceTest2_verify_transform_array(v->NamedArray, m*n, seed);
 	}
 
-	void ServiceTest2_verify_transform_multidimarray(RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
+	void ServiceTest2_verify_transform_multidimarray(const RR_INTRUSIVE_PTR<RRValue> v, size_t m, size_t n, uint32_t seed)
 	{
 		RR_INTRUSIVE_PTR<RRNamedArray<com::robotraconteur::testing::TestService3::transform> > v1 = RR_DYNAMIC_POINTER_CAST<RRNamedArray<com::robotraconteur::testing::TestService3::transform> >(v);
 		if (v1 && n == 1)
@@ -1132,7 +1123,7 @@ namespace RobotRaconteurTest
 	{
 		return p1;
 	}
-	void testroot3_impl::set_p1(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t > > > > value)
+	void testroot3_impl::set_p1(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t > > > >& value)
 	{
 		p1 = value;
 	}
@@ -1141,7 +1132,7 @@ namespace RobotRaconteurTest
 	{
 		return p2;
 	}
-	void testroot3_impl::set_p2(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t > > > > value)
+	void testroot3_impl::set_p2(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRArray<int32_t > > > >& value)
 	{
 		p2 = value;
 	}
@@ -1150,7 +1141,7 @@ namespace RobotRaconteurTest
 	{
 		return p3;
 	}
-	void testroot3_impl::set_p3(RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t > > > > value)
+	void testroot3_impl::set_p3(const RR_SHARED_PTR<Pipe<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t > > > >& value)
 	{
 		p3 = value;
 	}
@@ -1159,7 +1150,7 @@ namespace RobotRaconteurTest
 	{
 		return w1;
 	}
-	void testroot3_impl::set_w1(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t > > > > value)
+	void testroot3_impl::set_w1(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t > > > >& value)
 	{
 		w1 = value;
 	}
@@ -1168,7 +1159,7 @@ namespace RobotRaconteurTest
 	{
 		return w2;
 	}
-	void testroot3_impl::set_w2(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t > > > > value)
+	void testroot3_impl::set_w2(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRArray<int32_t > > > >& value)
 	{
 		w2 = value;
 	}
@@ -1177,7 +1168,7 @@ namespace RobotRaconteurTest
 	{
 		return w3;
 	}
-	void testroot3_impl::set_w3(RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t > > > > value)
+	void testroot3_impl::set_w3(const RR_SHARED_PTR<Wire<RR_INTRUSIVE_PTR<RRMultiDimArray<int32_t > > > >& value)
 	{
 		w3 = value;
 	}

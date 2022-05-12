@@ -23,8 +23,9 @@ using namespace com::robotraconteur::testing::TestService2;
 	{\
 	command;\
 	}\
-	catch (std::exception&)\
+	catch (std::exception& ee)\
 	{\
+	FAIL() << ee.what(); \
 	TestAsync_err(RR_MAKE_SHARED<UnknownException>("ERR","Err occurred"));\
 	}\
 

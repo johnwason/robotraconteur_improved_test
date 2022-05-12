@@ -75,7 +75,7 @@ bool rr_array_near_util_scalar(const T& a1, const T& a2)
 }
 
 template <typename T>
-bool rr_array_near_util_array(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> >& a1, RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> >& a2)
+bool rr_array_near_util_array(const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> >& a1, const RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> >& a2)
 {
     if ((!a1) && (!a2))
         return true;
@@ -102,7 +102,7 @@ bool rr_array_near_util_array(RR_INTRUSIVE_PTR<RobotRaconteur::RRArray<T> >& a1,
 }
 
 template <typename T, typename U, typename V>
-bool rr_array_near_util_base_array(U& a1, V& a2)
+bool rr_array_near_util_base_array(const U& a1, const V& a2)
 {
     if ((!a1) && (!a2))
         return true;
@@ -124,13 +124,13 @@ bool rr_array_near_util_base_array(U& a1, V& a2)
 }
 
 template <typename T>
-bool RRArrayNear(T& arg, T& b)
+bool RRArrayNear(const T& arg, const T& b)
 {
     return RobotRaconteur::test::detail::rr_array_near_util_array(arg,b);
 }
 
 template <typename T>
-bool RRBaseArrayNear(T& arg, T& b)
+bool RRBaseArrayNear(const T& arg, const T& b)
 {
     switch (b->GetTypeID())
     {
