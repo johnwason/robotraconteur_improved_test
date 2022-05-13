@@ -30,7 +30,7 @@ TEST(RobotRaconteurTestServer,Server)
 
     std::cout << "Server started, press enter to quit" << std::endl;
     getchar();
-    std::cout << "Test completed, no errors detected!" << std::endl;
+    
 }
 
 
