@@ -967,6 +967,7 @@ namespace RobotRaconteurTest
 		
 		ShouldNotBeErr_Timeout({
 		w1->SetOutValue(AttachRRArrayCopy(d1,10));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(5));
 		RR_INTRUSIVE_PTR<RRArray<double> > in1;
 		TimeSpec in1_time;
 		EXPECT_TRUE(w1->TryGetInValue(in1, in1_time));
@@ -976,6 +977,7 @@ namespace RobotRaconteurTest
 		double d4[] = { -1.014645e-21, 4.743740e+11, 5.804886e-04, 2.963852e-20, 4.277621e-21, -1.168151e+13, -2.638708e-18, -5.123312e+14, 1.261123e-05, 2.552626e-10 };
 		ShouldNotBeErr_Timeout({
 		w2->SetOutValue(s2);
+		boost::this_thread::sleep(boost::posix_time::milliseconds(5));
 		RR_INTRUSIVE_PTR<teststruct2> in2 = w2->GetInValue();		
 		EXPECT_RRARRAY_EQ(in2->mydat,AttachRRArray(d4,10,false));
 		}, 500);
