@@ -4,7 +4,6 @@ import time
 import traceback
 import RobotRaconteur as RR
 import pytest
-RRN = RR.RobotRaconteurNode.s
 import threading
 import numpy as np
 import numpy.testing as nptest
@@ -50,6 +49,14 @@ class testroot_impl(object):
         self._broadcastpipe=None
         self._broadcastwire=None
         self.tcptransport=tcptransport
+
+
+    def RRServiceObjectInit(self, ctx, service_path):
+        assert False
+        self._node = ctx.GetNode()
+        self._teststruct1_type = self._node.GetStructureType("com.robotraconteur.testing.TestService1.teststruct1")
+        self._teststruct2_type = self._node.GetStructureType("com.robotraconteur.testing.TestService1.teststruct2")
+        self._ostruct2_type = self._node.NewStructure("com.robotraconteur.testing.TestService2.ostruct2")
 
 
     @property
@@ -253,22 +260,22 @@ class testroot_impl(object):
 
     @property
     def struct1(self):
-        s1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct1")
+        s1=self._teststruct1_type()
         s1.dat1=[2.416507e+16, 4.573981e-21, 3.468194e+10, -2.393703e-06, 4.937973e-15, 4.706768e+14, 4.286830e-10, -1.090462e-14, 2.238670e+03, -1.254407e+14, -1.275776e-21, -4.124599e-10, -4.953108e+11, 2.808033e+03, 4.685151e+14, 3.710607e-08, 3.523588e-01, -5.585682e-20, -3.290719e+08, 1.600972e+17, 4.257210e+16, 1.114490e+04, 2.739939e-10, -4.332717e+16, 3.482223e+00, -2.162451e+10, -4.527774e-04, 8.558987e-19, 3.755463e-12, 3.863392e-08, -8.351348e-05, 4.774283e+02, -4.612524e-06, 2.206343e-06, -2.767520e-17, -4.183387e+08, -2.037466e-19, -1.780912e-18, 1.656909e-07, 4.799751e+07, -3.604348e-06, -3.146762e+08, -3.709450e+15, -2.379431e-09, -3.034066e+05, -3.072796e+01, -1.057111e-14, 4.753235e+07, -2.725014e+07, -4.895406e-20, 5.339502e-20, 9.375211e-11, 1.632454e-03, 1.051386e+01, 1.915580e+17, -1.999453e-09, -3.087190e-02, -3.222377e+15, 4.219576e+03, -1.401039e+05, 3.950473e-15, -1.620577e+10]
         s1.str2="Hello world!"
         s1.vec3={1 : "Hello Client!", 2 : "Hello Client, again", 4372 : "This is yet another test string"}
         s1.dict4={"teststring1" : "Hello Client!", "teststring2" : "Hello Client, again", "anotherstr" : "This is yet another test string"}
         s1.list5=["Hello Client!", "Hello Client, again", "This is yet another test string"]
-        s1.struct1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        s1.struct1=self._teststruct2_type()
         s1.struct1.mydat=[-2.457273e-05, -3.349504e-13, 4.139542e-09, -3.944556e+04, 2.761296e+04, 8.570027e+16, -2.472613e-03, -2.096009e+03, -4.186716e+10, 4.584716e-20, 3.951344e-03, 4.557915e+05, -7.117988e+03, -4.605957e+11, 7.353630e-10, -3.303575e-19, 6.133982e+05, 4.528668e+01, -1.427778e-11, -3.509465e+15, 1.695706e-04, 1.732872e+14, -6.370107e+01, 3.269065e-06, 4.480613e+03, 2.058970e-06, -3.748223e+05, -1.507989e-09, 1.690251e+19, -2.177567e-08, -2.391641e+16, 3.617128e+03, 2.568296e+15, -3.009031e-07, -3.754976e-09, 2.458890e-06, -3.800108e-11, 1.555663e-11, -2.085887e+18, 8.574830e-22, -7.228491e-13, -3.987643e-10, -4.777544e-02, 3.908200e+04, 4.221779e+11, -7.528852e+06, -2.077042e-19, 4.478813e-02, 3.506975e-06, 1.011231e+12, -2.181961e+17, -5.098346e+16, -3.791130e+06, -2.734203e-14, 6.340994e-13, -4.582535e+07, 3.977645e-06, -3.785260e-07, -4.102542e+06, 4.751411e-16, 4.203566e-14, -3.894958e+00, -4.585783e-14, 2.432993e+15, -3.592680e+14, -1.560186e-12]
-        s1_dstruct2_1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        s1_dstruct2_1=self._teststruct2_type()
         s1_dstruct2_1.mydat=[3.785355e-17, -2.518001e+17, 4.016500e+08, 6.566648e-04, 1.284318e+07, -2.674821e-13, -4.955749e-14, -1.699098e+00, 2.901400e+05, 1.499143e+13, -2.252822e-05, -2.653172e-14, -2.482811e+07, 2.353638e+18, -2.177258e+17, -4.715112e+06, 4.508858e-18, 1.205611e+17, -3.469181e+00, 2.383792e-13, 4.544766e+14, -3.029250e-05, -2.545049e+05, 3.149303e+19, -3.724982e-10, 4.066723e-02, 2.809941e-08, 1.279689e-20, -3.303471e-09, 1.846558e+08, 1.311495e-06, -1.185646e+04, -2.603100e-19, -3.519314e-17, -1.595996e+04, 9.735534e-20, 1.234003e-04, -9.697458e+08, -4.895883e-02, 4.770089e-16, 3.757918e-11, 5.253446e+18, 5.071614e-13, 3.793300e-08, -1.993536e+12, -1.846007e-11, -3.458666e+03, -3.995887e-10]
-        s1_dstruct2_2=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        s1_dstruct2_2=self._teststruct2_type()
         s1_dstruct2_2.mydat=[4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01, 4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02]
         s1.dstruct2={"test1" : s1_dstruct2_1, "anothertest" : s1_dstruct2_2}
-        s1_lstruct3_1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        s1_lstruct3_1=self._teststruct2_type()
         s1_lstruct3_1.mydat=[3.785355e-17, -2.518001e+17, 4.016500e+08, 6.566648e-04, 1.284318e+07, -2.674821e-13, -4.955749e-14, -1.699098e+00, 2.901400e+05, 1.499143e+13, -2.252822e-05, -2.653172e-14, -2.482811e+07, 2.353638e+18, -2.177258e+17, -4.715112e+06, 4.508858e-18, 1.205611e+17, -3.469181e+00, 2.383792e-13, 4.544766e+14, -3.029250e-05, -2.545049e+05, 3.149303e+19, -3.724982e-10, 4.066723e-02, 2.809941e-08, 1.279689e-20, -3.303471e-09, 1.846558e+08, 1.311495e-06, -1.185646e+04, -2.603100e-19, -3.519314e-17, -1.595996e+04, 9.735534e-20, 1.234003e-04, -9.697458e+08, -4.895883e-02, 4.770089e-16, 3.757918e-11, 5.253446e+18, 5.071614e-13, 3.793300e-08, -1.993536e+12, -1.846007e-11, -3.458666e+03, -3.995887e-10]
-        s1_lstruct3_2=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        s1_lstruct3_2=self._teststruct2_type()
         s1_lstruct3_2.mydat=[4.856615e+15, 5.981566e-22, 1.433616e+14, 1.747102e-09, 2.850376e+06, -3.748685e-08, -4.969544e-21, 2.530419e-01, 4.393913e-09, 3.837331e+04, -4.315065e-04, -1.073834e-17, 1.244057e-15, 3.901853e-10, -2.725237e+10, 2.896243e-18, 3.609897e-13, -1.937982e+02]
         s1.lstruct3=[s1_dstruct2_1,  s1_dstruct2_2]
         s1.multidimarray=np.array([-3.949071e-09, 2.753555e+10, -2.724923e+07, -3.553170e+09, -3.674923e+08, -2.479267e-22, -4.898990e+18, -3.561455e+19, 3.890325e+13, -4.980286e+18, 1.142884e-15, 1.570587e-12, 1.398743e-14, 1.769117e+11, 2.086717e+05, 2.986916e+13, -1.204547e-17, -6.138080e-08, -1.468512e-12, 3.240537e+11, 7.476873e+15, 1.627340e+19, -2.421611e-13, 3.549785e-20, 1.469061e+05, 4.172556e-06, -3.369810e-17, -4.639587e+10, 3.776574e-13, 4.990526e-08, -1.321627e+07, 4.224942e+10, -4.515185e-03, 3.619167e-12, 3.046092e+19, 3.712879e+03, -4.019784e-13, 4.005048e+18, 2.988709e-07, -4.123078e-06, -1.064380e+09, -1.931617e-18, 4.223366e-22, 1.783661e-19, -4.153799e+16, 1.591527e-10, -3.649908e-15, 4.348772e+18, -1.470750e-14, 1.637311e+08, 3.982951e-05, -1.304963e-04, -3.522058e-06, 3.869385e+02, -4.640831e-15, 1.292954e+00, -9.474137e+13, -4.196137e-17, -1.540996e+02, -1.742881e+00, -1.597433e-02, 4.062517e-04, -2.724799e-13, -4.113398e+05, -4.704501e+02, 2.977726e+04, -2.662004e+14, -1.376497e+04, -5.993109e-22, -1.265974e-15, 6.387767e+11, -2.696841e+04, -1.983347e+11, 3.214742e-13, 1.906709e-06, -6.956937e+12, 3.637926e-07, 2.706666e-16, -9.795675e-19, 7.311871e-15, 2.343927e-09, 1.709674e+18, 2.961079e-05, 4.009574e+11, 6.468308e-18, -4.041410e+11, 2.991768e-15, 4.240906e+19, 2.260404e-12, 4.786043e-03, 2.439493e-09, 1.698043e-13, 8.655885e-18, -2.598418e-15, 6.685593e+05, 2.895287e+13, -3.098095e-05, -3.764497e-06, 3.192785e-12, 2.098857e-08]).reshape([10, 10], order="F")
@@ -300,7 +307,7 @@ class testroot_impl(object):
 
     @property
     def struct2(self):
-        out=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        out=self._teststruct2_type()
         out.mydat=[-4.415088e+16, -2.033093e-17, 3.634431e-17, 2.030794e-03, 4.464343e-14, -4.137056e+11, 3.609991e-16, 4.332970e-11, 1.327470e-06, -3.304680e+02, 3.184654e-08, 1.194960e-16, -2.958549e+05, -3.320274e+13, 3.486845e-05, 2.878185e-10, -2.982726e-12, -3.653410e-06, 2.059068e+00, 1.150498e+16, -3.647068e+18, -3.847760e+03, -4.333684e-21, -2.357376e-07, -2.560470e-09, 2.931250e-15, 4.966713e-21, 2.960478e-14, -1.959583e+03, 4.593629e-16, 4.193491e-07, 5.941674e+14, 2.198075e+05, 1.487817e-20, -4.643292e+06, 2.543864e-14, 9.478332e+04, 2.948237e+13, -3.144190e-17, -1.369134e+11, -4.908672e-18, -3.581399e-21, -1.682968e-14, -8.984437e-02, 3.067043e-19, -3.361220e+14, -2.591105e-10, -2.119291e-13, 7.649594e+03, -1.869427e-01, -3.403057e+11, -4.798229e-09, -4.120069e+04, 3.384741e-12, 4.697254e-10, -3.594572e-02, -1.973059e+12, -2.627069e-21, 4.096077e-20, 1.629242e-20, -1.561816e+11, 3.240449e+07, -3.967391e+08, 4.635131e-14, -3.436364e-17, 1.485817e-15, -2.145973e+18, 1.160688e+19, 3.266439e+11, 1.686854e+02, -4.048943e+00, -2.905109e+17, -3.953827e+15, -2.855712e+10, -1.197294e-02, -1.997014e+14, 3.951602e+08, 1.287972e+18, -4.228933e+08, 4.212816e-06, -1.252397e+15, 3.517842e+12, -3.315039e-17, -1.816738e+19, 3.595783e+14, -2.834015e-08, 3.436611e+04, -4.192603e+12, 1.152454e+11, -9.405739e-21, -1.862898e+17, -3.811397e-10, 4.486272e+00, 3.666408e+14, -2.681908e-10, -4.859125e+08, -3.593152e+04, -1.883343e-03, -2.445939e-08, 4.540371e+01]
         return out
     @struct2.setter
@@ -309,7 +316,7 @@ class testroot_impl(object):
 
     @property
     def struct3(self):
-        out=RRN.NewStructure("com.robotraconteur.testing.TestService2.ostruct2")
+        out=self._ostruct2_type()
         out.a1=[-8.483090e-19, -4.401548e-08, 3.908118e+00, 2.063513e-18, 4.237047e+18, -1.124681e-16, 3.924541e-01, -2.184335e-10, -1.978950e+11, 1.586365e+18, 1.712393e+00, -6.314723e+00, 1.196777e-16, -2.748704e-08, -1.289967e+02, -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06, 1.315398e+17]
         return out
     @struct3.setter
@@ -403,7 +410,7 @@ class testroot_impl(object):
     @property
     def is_struct1(self):
         out={}
-        out1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        out1=self._teststruct2_type()
         out1.mydat=[-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03, 3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21]
         out[748]=out1
         return out
@@ -415,7 +422,7 @@ class testroot_impl(object):
     @property
     def is_struct2(self):
         out={}
-        out1= RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        out1= self._teststruct2_type()
         out1.mydat=[-4.489570e+13, 9.574895e-05, 4.081711e+06, 5.612839e-18, -1.078604e+05, 3.658139e+08, -4.748975e+05, -2.606481e+01, 3.016739e+15, 3.174709e+19, -4.572549e+17, 1.980389e-04, -3.551911e-10, 3.598401e-07, 2.659416e-12, -3.606157e+06, 2.059674e+17, -9.362336e-20, -3.299256e+17, -2.245745e+16]
         out["testval1"]=out1
         return out
@@ -470,7 +477,7 @@ class testroot_impl(object):
     @property
     def list_struct1(self):
         out=[]
-        out1=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        out1=self._teststruct2_type()
         out1.mydat=[-9.692618e+00, -1.944240e+03, -2.456327e+16, 4.673405e-20, 5.147581e-14, -3.773975e+15, 2.336430e-21, 1.597144e-18, -2.609059e-03, 3.557639e-21, -1.666575e-16, -4.242788e-07, 2.686206e+07, -3.200902e-05, -1.549754e-06, -3.010796e-12, 4.638418e+01, 2.664397e-14, -2.689174e+01, 4.564584e-21]
         out.append(out1)
         return out
@@ -483,7 +490,7 @@ class testroot_impl(object):
 
     @property
     def is_struct3(self):
-        out=RRN.NewStructure("com.robotraconteur.testing.TestService2.ostruct2")
+        out=self._ostruct2_type()
         out.a1=[-8.483090e-19, -4.401548e-08, 3.908118e+00, 2.063513e-18, 4.237047e+18, -1.124681e-16, 3.924541e-01, -2.184335e-10, -1.978950e+11, 1.586365e+18, 1.712393e+00, -6.314723e+00, 1.196777e-16, -2.748704e-08, -1.289967e+02, -4.051137e+17, -1.902860e+10, -2.070486e+08, 3.622651e+06, 1.315398e+17]
         return out
     @is_struct3.setter
@@ -506,7 +513,7 @@ class testroot_impl(object):
 
     @property
     def var_struct(self):
-        out=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+        out=self._teststruct2_type()
         out.mydat=[-9.052731e+13, 4.151705e-17, -4.004463e+19, -2.838274e+03, 9.983314e+12, 2.764122e+10, -1.131486e+03, 2.418899e+12, 1.323675e-05, -4.602174e+13, 2.717530e+01, 1.193887e-10, -4.137578e+16, -1.246990e-19, 4.244315e-18, -2.833005e-08, 1.956266e-04, 4.130129e-21, 1.641708e-11, -4.488158e-19]
         return RR.VarValue(out,"com.robotraconteur.testing.TestService1.teststruct2")
     @var_struct.setter
@@ -570,19 +577,19 @@ class testroot_impl(object):
                 self.ev1.fire()
             except:
                 traceback.print_exc()
-        t = RRN.CreateTimer(1,timer_handler,True)
+        t = self._node.CreateTimer(1,timer_handler,True)
         t.Start()
         
 
     def func2(self, d1, d2):
         def timer_handler(ev):
             try:                
-                s=RRN.NewStructure("com.robotraconteur.testing.TestService1.teststruct2")
+                s=self._teststruct2_type()
                 s.mydat=[d2]
                 self.ev2.fire(d1,s)
             except:
                 traceback.print_exc()
-        t = RRN.CreateTimer(1,timer_handler,True)
+        t = self._node.CreateTimer(1,timer_handler,True)
         t.Start()
 
     def func3(self, d1, d2):
@@ -598,7 +605,7 @@ class testroot_impl(object):
         except:
             #traceback.print_exc()
             print ("No user")
-        print (str(RRN.NowUTC()))
+        print (str(self._node.NowUTC()))
 
 
 
@@ -627,11 +634,11 @@ class testroot_impl(object):
         raise RR.DataTypeException("This is a test 1")
 
     def func_errtest2(self):
-        e=RRN.GetExceptionType("com.robotraconteur.testing.TestService1.testexception1")
+        e=self._node.GetExceptionType("com.robotraconteur.testing.TestService1.testexception1")
         raise e("This is a test 2")
 
     def func_errtest3(self):
-        e=RRN.GetExceptionType("com.robotraconteur.testing.TestService2.testexception3")
+        e=self._node.GetExceptionType("com.robotraconteur.testing.TestService2.testexception3")
         raise e("This is a test 3")
 
     #objrefs
@@ -716,7 +723,7 @@ class testroot_impl(object):
                             self._packet_sent=True
             except:
                 pass
-        RRN.PostToThreadPool(p1_pr)
+        self._node.PostToThreadPool(p1_pr)
         
 
     def p1_packet_ack_received(self,p,packetnum):
@@ -785,7 +792,7 @@ class testroot_impl(object):
             except:
                 pass
 
-        t = RRN.CreateTimer(.025,timer_func,oneshot=False)
+        t = self._node.CreateTimer(.025,timer_func,oneshot=False)
         t.Start()
 
     #wires
@@ -852,7 +859,7 @@ class testroot_impl(object):
             except:
                 pass
 
-        t = RRN.CreateTimer(.025,timer_func,oneshot=False)
+        t = self._node.CreateTimer(.025,timer_func,oneshot=False)
         t.Start()
 
 class sub1_impl(object):
