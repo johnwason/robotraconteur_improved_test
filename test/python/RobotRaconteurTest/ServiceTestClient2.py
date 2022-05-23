@@ -136,7 +136,7 @@ class ServiceTestClient2:
         assert self._r.testenum1_prop == c['testenum1']['anothervalue']
         self._r.testenum1_prop=c['testenum1']['hexval1']
         
-    def TestPod(self):
+    def TestPods(self):
 
         if sys.platform == "darwin" and sys.version_info[0] < 3:
             return
@@ -149,7 +149,7 @@ class ServiceTestClient2:
         s1_1 = RobotRaconteurPythonUtil.UnpackMessageElement(s1_m, 'com.robotraconteur.testing.TestService3.testpod1', self._r)
         ServiceTest2_verify_testpod1(s1_1[0],563921043)
         
-        s3 = ServiceTest2_fill_teststruct3(858362,self._r)
+        s3 = ServiceTest2_fill_teststruct3(RRN,858362,self._r)
         #ServiceTest2_verify_teststruct3(s3,858362)
         s3_m = RobotRaconteurPythonUtil.PackMessageElement(s3, 'com.robotraconteur.testing.TestService3.teststruct3', self._r)
         s3_m.UpdateData()
@@ -169,7 +169,7 @@ class ServiceTestClient2:
         self._r.testpod1_func1(f2);
         
         #ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
-        self._r.teststruct3_prop = (ServiceTest2_fill_teststruct3(858362, self._r));
+        self._r.teststruct3_prop = (ServiceTest2_fill_teststruct3(RRN,858362, self._r));
         
     def TestGenerators(self):
         assert cmp(self._r.gen_func1().NextAll(), list(xrange(16))) == 0
@@ -352,7 +352,7 @@ class ServiceTestClient2:
 
         o5.f2()
         
-        with pytest.Raises(RR.ObjectLockedException):
+        with pytest.raises(RR.ObjectLockedException):
             o5.q1.Connect(-1).Close()
         o5.q2.Connect(-1).Close()
         
@@ -376,7 +376,7 @@ class ServiceTestClient2:
         with pytest.raises(RR.ObjectLockedException):
             o5.m3.Write(0,b1,0,10)
         
-    def TestBool(self):
+    def TestBools(self):
         
         self._r.b1=True
         assert self._r.b1

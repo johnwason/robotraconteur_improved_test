@@ -23,7 +23,7 @@ class TestServerNodeConfig:
             self.node_setup = RR.RobotRaconteurNodeSetup(nodename,0,server_flags,RR.RobotRaconteurNodeSetupFlags_SERVER_DEFAULT_ALLOWED_OVERRIDE,node=self.node)
 
             self.node.RegisterServiceTypesFromFiles(["com.robotraconteur.testing.TestService2","com.robotraconteur.testing.TestService1", 
-                "com.robotraconteur.testing.TestService3","com.robotraconteur.testing.TestService5"])
+                "com.robotraconteur.testing.TestService3", "com.robotraconteur.testing.TestService4", "com.robotraconteur.testing.TestService5"])
 
             t = self.node_setup.tcp_transport
 

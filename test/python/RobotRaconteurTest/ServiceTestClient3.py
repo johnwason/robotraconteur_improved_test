@@ -48,7 +48,7 @@ class ServiceTestClient3:
         with pytest.raises(RR.InvalidOperationException):
             self._r.err_func()
 
-        asynctestexp = RRN.GetExceptionType("com.robotraconteur.testing.TestService5.asynctestexp")
+        asynctestexp = RRN.GetExceptionType("com.robotraconteur.testing.TestService5.asynctestexp",self._r)
         try:
             self._r.err_func2()
         except asynctestexp:
