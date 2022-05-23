@@ -353,10 +353,10 @@ class ServiceTestClient:
         e3=RRN.GetExceptionType("com.robotraconteur.testing.TestService2.testexception3",self._r)
         
         # TODO: catch service definition exception types
-        with pytest.Raises(Exception):
+        with pytest.raises(Exception):
             self._r.func_errtest2()
         
-        with pytest.Raises(Exception):
+        with pytest.raises(Exception):
             self._r.func_errtest3()
 
 
@@ -646,20 +646,20 @@ class ServiceTestClient:
         m5 = np.zeros((4,4,4,4,10),dtype=np.float64)
         multidim_array_util.set_multidim_array_sub(m5, [2,1,2,1,0], m4)
 
-        self._r.m2.Write([0, 0, 0, 0, 0], m1, [0, 0, 0, 0, 0], m1.Dims)
+        self._r.m2.Write([0, 0, 0, 0, 0], m1, [0, 0, 0, 0, 0], m1.shape)
         m1_2 = np.zeros([10, 10, 10, 10, 10])
-        self._r.m2.Read([0, 0, 0, 0, 0], m1_2, [0, 0, 0, 0, 0], m1.Dims)
+        self._r.m2.Read([0, 0, 0, 0, 0], m1_2, [0, 0, 0, 0, 0], m1.shape)
         nptest.assert_allclose(m1,m1_2)        
         self._r.m2.Write([2, 2, 3, 3, 4], m2, [0, 2, 0, 0, 0], [1, 5, 5, 2, 1])
         m2_2 = np.zeros([10, 10, 10, 10, 10])
-        self._r.m2.Read([0, 0, 0, 0, 0], m2_2, [0, 0, 0, 0, 0], m1.Dims)
-        np.assert_allclose(m2_2, m3)
+        self._r.m2.Read([0, 0, 0, 0, 0], m2_2, [0, 0, 0, 0, 0], m1.shape)
+        nptest.assert_allclose(m2_2, m3)
         m6 = np.zeros([2, 2, 1, 1, 10])
         self._r.m2.Read([4, 2, 2, 8, 0], m6, [0, 0, 0, 0, 0], [2, 2, 1, 1, 10])
-        np.assert_allclose(m4, m6)        
+        nptest.assert_allclose(m4, m6)        
         m7 = np.zeros([4, 4, 4, 4, 10])
         self._r.m2.Read([4, 2, 2, 8, 0], m7, [2, 1, 2, 1, 0], [2, 2, 1, 1, 10])
-        np.assert_allclose(m5, m7)
+        nptest.assert_allclose(m5, m7)
         
     def test_m3(self):
         rng = lfsr.LFSRSeqGen (1234, "multidimarray_test_byte")
@@ -789,13 +789,13 @@ class ServiceTestClient:
         #Relock, test that the lock is active, and then close the connection.  The lock should release.  The
         #second session is closed first, and should not release the lock.
         RRN.RequestObjectLock(r1_o, RR.RobotRaconteurObjectLockFlags_USER_LOCK)
-        with pytest.Raises(Exception):
+        with pytest.raises(Exception):
             r3_o.d1=[1.0]
         r2_o.d1 = [1.0]
         RRN.DisconnectService(r2)
         #Object still should be locked
 
-        with pytest.Raises(Exception):
+        with pytest.raises(Exception):
             r3_o.d1=[1.0]
         
         #Now close the session and lock should be released
@@ -959,6 +959,7 @@ class ServiceTestClient:
                 return
             try:
                 assert o1 is not None
+                o1.d1 = 10.2
                 dd=o1.d1
 
                 r.p1.AsyncConnect(-1,functools.partial(TestAsync8,r))

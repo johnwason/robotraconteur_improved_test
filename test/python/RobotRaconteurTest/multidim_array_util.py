@@ -14,10 +14,10 @@ def get_multidim_array_sub(source, srcpos, count):
     d = []
     for s,c in zip(srcpos,count):
         d.append(slice(s,s+c))
-    return source[d]
+    return source[tuple(d)]
 
 def set_multidim_array_sub(dest,destpos,source):
     d = []
-    for s,c in zip(destpos,source.dims):
+    for s,c in zip(destpos,source.shape):
         d.append(slice(s,s+c))
-    return source[d]
+    dest[tuple(d)] = source
