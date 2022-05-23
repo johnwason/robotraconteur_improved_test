@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import copy
 import RobotRaconteur as RR
-RRN = RR.RobotRaconteurNode.s
 import numpy as np
 import numpy.testing as nptest
 
@@ -22,13 +21,6 @@ class testroot3_impl(object):
         
         self._timer=None
         
-        self._const=RRN.GetConstants("com.robotraconteur.testing.TestService3")
-        pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod2')
-        self._pod_m1=RR.ArrayMemory(np.zeros((1024,),dtype=pod_dtype))
-        self._pod_m2=RR.MultiDimArrayMemory(np.zeros((3,3),dtype=pod_dtype))
-        transform_dtype=RRN.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform')
-        self._namedarray_m1=RR.ArrayMemory(np.zeros((512,),dtype=transform_dtype))
-        self._namedarray_m2=RR.MultiDimArrayMemory(np.zeros((10,10),dtype=transform_dtype))
         self._o5 = obj5_impl()
         
         self.c_m1=RR.ArrayMemory(np.zeros((100,),np.complex128))
@@ -37,6 +29,18 @@ class testroot3_impl(object):
         self.c_m5=RR.ArrayMemory(np.zeros((512,),np.bool_))
         self.c_m6=RR.MultiDimArrayMemory(np.zeros((10,10),np.bool_))
         
+    def RRServiceObjectInit(self, ctx, service_path):
+        self._node = ctx.GetNode()
+        self._const=self._node.GetConstants("com.robotraconteur.testing.TestService3")
+        pod_dtype=self._node.GetPodDType('com.robotraconteur.testing.TestService3.testpod2')
+        self._pod_m1=RR.ArrayMemory(np.zeros((1024,),dtype=pod_dtype))
+        self._pod_m2=RR.MultiDimArrayMemory(np.zeros((3,3),dtype=pod_dtype))
+        transform_dtype=self._node.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform')
+        self._namedarray_m1=RR.ArrayMemory(np.zeros((512,),dtype=transform_dtype))
+        self._namedarray_m2=RR.MultiDimArrayMemory(np.zeros((10,10),dtype=transform_dtype))
+        self._timer=self._node.CreateTimer(.1, self._timer_handler)
+        self._timer.Start()
+
     @property
     def peekwire(self):
         return self._peekwire
@@ -44,9 +48,7 @@ class testroot3_impl(object):
     def peekwire(self, v):
         self._peekwire=v
         self._peekwire_b=RR.WireBroadcaster(v)
-        self._peekwire_b.OutValue=56295674
-        self._timer=RRN.CreateTimer(.1, self._timer_handler)
-        self._timer.Start()
+        self._peekwire_b.OutValue=56295674        
     
     def _timer_handler(self,evt):
         self._peekwire_b.OutValue=56295674
@@ -77,7 +79,7 @@ class testroot3_impl(object):
 
     @property
     def testpod1_prop(self):
-        return ServiceTest2_fill_testpod1(563921043, None)
+        return ServiceTest2_fill_testpod1(self._node, 563921043, None)
 
     @testpod1_prop.setter
     def testpod1_prop(self,value):
@@ -87,7 +89,7 @@ class testroot3_impl(object):
         ServiceTest2_verify_testpod1(s[0], 29546592)
         
     def testpod1_func2(self):
-        return ServiceTest2_fill_testpod1(95836295,None);
+        return ServiceTest2_fill_testpod1(self._node, 95836295,None);
     
     @property
     def teststruct3_prop(self):
@@ -120,17 +122,17 @@ class testroot3_impl(object):
     
     @property
     def testnamedarray1(self):
-        return ServiceTest2_fill_transform(74637,None)['translation'];
+        return ServiceTest2_fill_transform(self._node,74637,None)['translation'];
     
     @testnamedarray1.setter
     def testnamedarray1(self,value):
-        a1=ServiceTest2_fill_transform(3956378,None);
+        a1=ServiceTest2_fill_transform(self._node,3956378,None);
         a1['translation'] = value;
         ServiceTest2_verify_transform(a1, 3956378);
         
     @property
     def testnamedarray2(self):
-        return ServiceTest2_fill_transform(1294,None);
+        return ServiceTest2_fill_transform(self._node,1294,None);
     
     @testnamedarray2.setter
     def testnamedarray2(self,value):
@@ -138,7 +140,7 @@ class testroot3_impl(object):
         
     @property
     def testnamedarray3(self):
-        return ServiceTest2_create_transform_array(8, 837512,None)
+        return ServiceTest2_create_transform_array(self._node,8, 837512,None)
     
     @testnamedarray3.setter
     def testnamedarray3(self,value):
@@ -146,7 +148,7 @@ class testroot3_impl(object):
         
     @property
     def testnamedarray4(self):
-        return ServiceTest2_create_transform_multidimarray(7, 2, 66134,None)
+        return ServiceTest2_create_transform_multidimarray(self._node,7, 2, 66134,None)
     
     @testnamedarray4.setter
     def testnamedarray4(self,value):
@@ -154,7 +156,7 @@ class testroot3_impl(object):
         
     @property
     def testnamedarray5(self):
-        return ServiceTest2_create_transform_multidimarray(3, 2, 773142,None);
+        return ServiceTest2_create_transform_multidimarray(self._node,3, 2, 773142,None);
     
     @testnamedarray5.setter
     def testnamedarray5(self,value):
@@ -282,7 +284,7 @@ class testroot3_impl(object):
         params_dict["param1"] = RR.VarValue(30,"int32")
         params_dict["param2"] = RR.VarValue("40","string")
         params_ = RR.VarValue(params_dict,"varvalue{string}")
-        e4=RRN.GetExceptionType("com.robotraconteur.testing.TestService3.test_exception4")
+        e4=self._node.GetExceptionType("com.robotraconteur.testing.TestService3.test_exception4")
         err = e4("test error2","my_error2",params_)
         raise err
     
@@ -384,9 +386,9 @@ def ServiceTest2_verify_int8_array(gen,a, len_):
     for d in a:
         assert gen.get_int8() == d
 
-def ServiceTest2_fill_testpod1(seed, obj):        
+def ServiceTest2_fill_testpod1(node, seed, obj):        
     gen = ServiceTest2_test_sequence_gen(seed)
-    pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
+    pod_dtype=node.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
     s=np.zeros((1,),dtype=pod_dtype)
     s['d1'] = gen.get_double()
     s['d2'] = ServiceTest2_create_double_array(gen, 6)
@@ -395,24 +397,24 @@ def ServiceTest2_fill_testpod1(seed, obj):
     s['d3']['array'][0][0:len(d3)] = d3
     s['d4'] = ServiceTest2_create_double_array(gen,9).reshape((3,3), order="F")
 
-    s['s1'] = ServiceTest2_fill_testpod2(gen.get_uint32(), obj)
-    s['s2'] = ServiceTest2_create_testpod2_array(gen, 8, obj)
-    s3 = ServiceTest2_create_testpod2_array(gen, (gen.get_uint32() % 9), obj)
+    s['s1'] = ServiceTest2_fill_testpod2(node, gen.get_uint32(), obj)
+    s['s2'] = ServiceTest2_create_testpod2_array(node, gen, 8, obj)
+    s3 = ServiceTest2_create_testpod2_array(node, gen, (gen.get_uint32() % 9), obj)
     s['s3']['len'] = len(s3)
     s['s3']['array'][0][0:len(s3)] = s3 
-    s['s4'] = ServiceTest2_create_testpod2_array(gen, 8, obj).reshape((2,4), order="F")
+    s['s4'] = ServiceTest2_create_testpod2_array(node, gen, 8, obj).reshape((2,4), order="F")
     
-    s['t1'] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
+    s['t1'] = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
     for i in xrange(4):
-        s[0]['t2'][i] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
+        s[0]['t2'][i] = ServiceTest2_fill_transform(node, gen.get_uint32(), obj)
     t3_len = gen.get_uint32() % 15
     s['t3']['len'] = t3_len
     for i in xrange(t3_len):
-        s[0]['t3']['array'][i] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
-    n_dtype=RRN.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
+        s[0]['t3']['array'][i] = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
+    n_dtype=node.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
     t4 = np.ndarray((8,), dtype=n_dtype)
     for i in xrange(8):
-        t4[i] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
+        t4[i] = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
     s['t4'] = t4.reshape((2,4), order="F")
    
     return s
@@ -443,9 +445,9 @@ def ServiceTest2_verify_testpod1(s, seed):
     for i in xrange(8):
         ServiceTest2_verify_transform(t4[i], gen.get_uint32())    
 
-def ServiceTest2_fill_testpod2(seed, obj):
+def ServiceTest2_fill_testpod2(node, seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed);
-    pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', obj)
+    pod_dtype=node.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', obj)
     s=np.zeros((1,),dtype=pod_dtype)
     s['i1'] = gen.get_int8()
     s['i2'] = ServiceTest2_create_int8_array(gen, 15)
@@ -460,12 +462,12 @@ def ServiceTest2_verify_testpod2(s, seed):
     ServiceTest2_verify_int8_array(gen, s['i2'], 15)
     ServiceTest2_verify_int8_array(gen, s['i3']['array'][0:s['i3']['len']], (gen.get_uint32() % 15))
 
-def ServiceTest2_create_testpod1_array(len_, seed, obj):
-    pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
+def ServiceTest2_create_testpod1_array(node, len_, seed, obj):
+    pod_dtype=node.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
     s=np.zeros((len_,),dtype=pod_dtype)
     gen = ServiceTest2_test_sequence_gen(seed)
     for i in xrange(len_):
-        s[i] = ServiceTest2_fill_testpod1(gen.get_uint32(), obj)
+        s[i] = ServiceTest2_fill_testpod1(node, gen.get_uint32(), obj)
     return s
     
 def ServiceTest2_verify_testpod1_array(v, len_, seed):
@@ -475,11 +477,11 @@ def ServiceTest2_verify_testpod1_array(v, len_, seed):
     for i in xrange(len_):
         ServiceTest2_verify_testpod1(v[i], gen.get_uint32())
     
-def ServiceTest2_create_testpod2_array(gen, len_, obj):
-    pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', obj)
+def ServiceTest2_create_testpod2_array(node, gen, len_, obj):
+    pod_dtype=node.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', obj)
     s=np.zeros((len_,),dtype=pod_dtype)
     for i in xrange(len_):
-        s[i] = ServiceTest2_fill_testpod2(gen.get_uint32(), obj)
+        s[i] = ServiceTest2_fill_testpod2(node, gen.get_uint32(), obj)
     return s
 
 def ServiceTest2_verify_testpod2_array(gen, v, len_):
@@ -487,12 +489,12 @@ def ServiceTest2_verify_testpod2_array(gen, v, len_):
     for i in xrange(len_):    
         ServiceTest2_verify_testpod2(v[i], gen.get_uint32())
    
-def ServiceTest2_create_testpod1_multidimarray(m, n, seed, obj):
+def ServiceTest2_create_testpod1_multidimarray(node, m, n, seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed);
-    pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
+    pod_dtype=node.GetPodDType('com.robotraconteur.testing.TestService3.testpod1', obj)
     s=np.zeros((m*n,),dtype=pod_dtype)
     for i in xrange(m*n):
-        s[i] = ServiceTest2_fill_testpod1(gen.get_uint32(), obj)
+        s[i] = ServiceTest2_fill_testpod1(node, gen.get_uint32(), obj)
     
     return s.reshape((m,n), order="F")
     
@@ -501,69 +503,69 @@ def ServiceTest2_verify_testpod1_multidimarray(v, m, n, seed):
     v2 = v.reshape((m*n,), order="F")    
     ServiceTest2_verify_testpod1_array(v2, m * n, seed)
    
-def ServiceTest2_fill_teststruct3(seed, obj):
-    o=RRN.NewStructure('com.robotraconteur.testing.TestService3.teststruct3', obj)
+def ServiceTest2_fill_teststruct3(node, seed, obj):
+    o=node.NewStructure('com.robotraconteur.testing.TestService3.teststruct3', obj)
     gen = ServiceTest2_test_sequence_gen(seed)   
-    o.s1 = ServiceTest2_fill_testpod1(gen.get_uint32(), obj)
+    o.s1 = ServiceTest2_fill_testpod1(node, gen.get_uint32(), obj)
     s2_seed = gen.get_uint32()
-    o.s2 = ServiceTest2_create_testpod1_array((s2_seed % 17), s2_seed,obj)
-    o.s3 = ServiceTest2_create_testpod1_array(11, gen.get_uint32(),obj)
+    o.s2 = ServiceTest2_create_testpod1_array(node, (s2_seed % 17), s2_seed,obj)
+    o.s3 = ServiceTest2_create_testpod1_array(node, 11, gen.get_uint32(),obj)
     s4_seed = gen.get_uint32()
-    o.s4 = ServiceTest2_create_testpod1_array((s4_seed % 16), s4_seed, obj)
-    o.s5 = ServiceTest2_create_testpod1_multidimarray(3, 3, gen.get_uint32(), obj)
+    o.s4 = ServiceTest2_create_testpod1_array(node, (s4_seed % 16), s4_seed, obj)
+    o.s5 = ServiceTest2_create_testpod1_multidimarray(node, 3, 3, gen.get_uint32(), obj)
     s6_seed = gen.get_uint32()
-    o.s6 = ServiceTest2_create_testpod1_multidimarray((s6_seed % 6), (s6_seed % 3), s6_seed, obj)
+    o.s6 = ServiceTest2_create_testpod1_multidimarray(node, (s6_seed % 6), (s6_seed % 3), s6_seed, obj)
     o.s7 = []
-    o.s7.append(ServiceTest2_fill_testpod1(gen.get_uint32(),obj))
+    o.s7.append(ServiceTest2_fill_testpod1(node, gen.get_uint32(),obj))
     
     o.s8 =[]
-    o.s8.append(ServiceTest2_create_testpod1_array(2, gen.get_uint32(),obj))
-    o.s8.append(ServiceTest2_create_testpod1_array(4, gen.get_uint32(),obj))
+    o.s8.append(ServiceTest2_create_testpod1_array(node, 2, gen.get_uint32(),obj))
+    o.s8.append(ServiceTest2_create_testpod1_array(node, 4, gen.get_uint32(),obj))
 
     o.s9 = []
-    o.s9.append(ServiceTest2_create_testpod1_multidimarray(2, 3, gen.get_uint32(),obj))
-    o.s9.append(ServiceTest2_create_testpod1_multidimarray(4, 5, gen.get_uint32(),obj))
+    o.s9.append(ServiceTest2_create_testpod1_multidimarray(node, 2, 3, gen.get_uint32(),obj))
+    o.s9.append(ServiceTest2_create_testpod1_multidimarray(node, 4, 5, gen.get_uint32(),obj))
     
-    s10 = ServiceTest2_fill_testpod1(gen.get_uint32(),obj)
+    s10 = ServiceTest2_fill_testpod1(node, gen.get_uint32(),obj)
     o.s10 = RR.VarValue(s10 , 'com.robotraconteur.testing.TestService3.testpod1[]')
 
-    o.s11 = RR.VarValue(ServiceTest2_create_testpod1_array(3, gen.get_uint32(),obj) , 'com.robotraconteur.testing.TestService3.testpod1[]')
-    o.s12 = RR.VarValue(ServiceTest2_create_testpod1_multidimarray(2, 2, gen.get_uint32(), obj), 'com.robotraconteur.testing.TestService3.testpod1[*]')
+    o.s11 = RR.VarValue(ServiceTest2_create_testpod1_array(node, 3, gen.get_uint32(),obj) , 'com.robotraconteur.testing.TestService3.testpod1[]')
+    o.s12 = RR.VarValue(ServiceTest2_create_testpod1_multidimarray(node, 2, 2, gen.get_uint32(), obj), 'com.robotraconteur.testing.TestService3.testpod1[*]')
 
-    s13 = ServiceTest2_fill_testpod1(gen.get_uint32(), obj)
+    s13 = ServiceTest2_fill_testpod1(node, gen.get_uint32(), obj)
     o.s13 = RR.VarValue([s13], 'com.robotraconteur.testing.TestService3.testpod1[]{list}')
 
     s14 = RR.VarValue([], 'com.robotraconteur.testing.TestService3.testpod1[]{list}')
-    s14.data.append(ServiceTest2_create_testpod1_array(3, gen.get_uint32(),obj))
-    s14.data.append(ServiceTest2_create_testpod1_array(5, gen.get_uint32(),obj))
+    s14.data.append(ServiceTest2_create_testpod1_array(node, 3, gen.get_uint32(),obj))
+    s14.data.append(ServiceTest2_create_testpod1_array(node, 5, gen.get_uint32(),obj))
     o.s14 = s14;
 
     s15 = RR.VarValue([], 'com.robotraconteur.testing.TestService3.testpod1[*]{list}')
-    s15.data.append(ServiceTest2_create_testpod1_multidimarray(7, 2, gen.get_uint32(),obj))
-    s15.data.append(ServiceTest2_create_testpod1_multidimarray(5, 1, gen.get_uint32(),obj));
+    s15.data.append(ServiceTest2_create_testpod1_multidimarray(node, 7, 2, gen.get_uint32(),obj))
+    s15.data.append(ServiceTest2_create_testpod1_multidimarray(node, 5, 1, gen.get_uint32(),obj));
     o.s15 = s15;
     
-    o.t1 = ServiceTest2_fill_transform(gen.get_uint32(), obj)
-    o.t2 = ServiceTest2_create_transform_array(4, gen.get_uint32(),obj)
-    o.t3 = ServiceTest2_create_transform_multidimarray(2, 4, gen.get_uint32(), obj)
+    o.t1 = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
+    o.t2 = ServiceTest2_create_transform_array(node, 4, gen.get_uint32(),obj)
+    o.t3 = ServiceTest2_create_transform_multidimarray(node, 2, 4, gen.get_uint32(), obj)
     
-    o.t4 = RR.VarValue(ServiceTest2_create_transform_array(10, gen.get_uint32(),obj), 'com.robotraconteur.testing.TestService3.transform[]')
-    o.t5 = RR.VarValue(ServiceTest2_create_transform_multidimarray(6, 5, gen.get_uint32(), obj), 'com.robotraconteur.testing.TestService3.transform[*]')
+    o.t4 = RR.VarValue(ServiceTest2_create_transform_array(node, 10, gen.get_uint32(),obj), 'com.robotraconteur.testing.TestService3.transform[]')
+    o.t5 = RR.VarValue(ServiceTest2_create_transform_multidimarray(node, 6, 5, gen.get_uint32(), obj), 'com.robotraconteur.testing.TestService3.transform[*]')
     
-    o.t6 = [ServiceTest2_fill_transform(gen.get_uint32(), obj)]
-    o.t7 = [ServiceTest2_create_transform_array(4, gen.get_uint32(),obj), \
-            ServiceTest2_create_transform_array(4, gen.get_uint32(),obj) ]
+    o.t6 = [ServiceTest2_fill_transform(node,gen.get_uint32(), obj)]
+    o.t7 = [ServiceTest2_create_transform_array(node, 4, gen.get_uint32(),obj), \
+            ServiceTest2_create_transform_array(node, 4, gen.get_uint32(),obj) ]
     
-    o.t8 = [ServiceTest2_create_transform_multidimarray(2, 4, gen.get_uint32(), obj), \
-            ServiceTest2_create_transform_multidimarray(2, 4, gen.get_uint32(), obj)]
+    o.t8 = [ServiceTest2_create_transform_multidimarray(node, 2, 4, gen.get_uint32(), obj), \
+            ServiceTest2_create_transform_multidimarray(node, 2, 4, gen.get_uint32(), obj)]
     
-    o.t9 = RR.VarValue([ServiceTest2_fill_transform(gen.get_uint32(), obj)], 'com.robotraconteur.testing.TestService3.transform{list}')
+    o.t9 = RR.VarValue([ServiceTest2_fill_transform(node,gen.get_uint32(), obj)], 'com.robotraconteur.testing.TestService3.transform{list}')
     
-    o.t10 = RR.VarValue([ServiceTest2_create_transform_array(3, gen.get_uint32(),obj), \
-            ServiceTest2_create_transform_array(5, gen.get_uint32(),obj) ], 'com.robotraconteur.testing.TestService3.transform[]{list}')
+    o.t10 = RR.VarValue([ServiceTest2_create_transform_array(node, 3, gen.get_uint32(),obj), \
+            ServiceTest2_create_transform_array(node, 5, gen.get_uint32(),obj) ], 'com.robotraconteur.testing.TestService3.transform[]{list}')
     
-    o.t11 = RR.VarValue([ServiceTest2_create_transform_multidimarray(7, 2, gen.get_uint32(), obj), \
-            ServiceTest2_create_transform_multidimarray(5, 1, gen.get_uint32(), obj)], 'com.robotraconteur.testing.TestService3.transform[*]{list}')
+    o.t11 = RR.VarValue([ServiceTest2_create_transform_multidimarray(node, 7, 2, gen.get_uint32(), obj), \
+            ServiceTest2_create_transform_multidimarray(node, 5, 1, gen.get_uint32(), obj)], 'com.robotraconteur.testing.TestService3.transform[*]{list}')
     
     
     return o;
@@ -653,9 +655,9 @@ def ServiceTest2_verify_teststruct3(v, seed):
     ServiceTest2_verify_transform_multidimarray(t11[0].data, 7, 2, gen.get_uint32())
     ServiceTest2_verify_transform_multidimarray(t11[1].data, 5, 1, gen.get_uint32())
     
-def ServiceTest2_fill_transform(seed, obj):
+def ServiceTest2_fill_transform(node, seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed);
-    n_dtype=RRN.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
+    n_dtype=node.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
     s=np.zeros((1,),dtype=n_dtype)
     s1 = s.view(np.float64)
     s1[:] = np.array([gen.get_double() for _ in xrange(7)])
@@ -666,12 +668,12 @@ def ServiceTest2_verify_transform(s, seed):
     s1 = np.atleast_1d(s).view(np.float64)
     nptest.assert_allclose(s1, np.array([gen.get_double() for _ in xrange(7)]))
 
-def ServiceTest2_create_transform_array(len_, seed, obj):
+def ServiceTest2_create_transform_array(node, len_, seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed) 
-    n_dtype=RRN.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
+    n_dtype=node.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
     s=np.zeros((len_,),dtype=n_dtype)
     for i in xrange(len_):
-        s[i] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
+        s[i] = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
     return s
 
 def ServiceTest2_verify_transform_array(v, len_, seed):
@@ -680,12 +682,12 @@ def ServiceTest2_verify_transform_array(v, len_, seed):
     for i in xrange(len_):    
         ServiceTest2_verify_transform(v[i], gen.get_uint32())
 
-def ServiceTest2_create_transform_multidimarray(m, n, seed, obj):
+def ServiceTest2_create_transform_multidimarray(node, m, n, seed, obj):
     gen = ServiceTest2_test_sequence_gen(seed);
-    n_dtype=RRN.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
+    n_dtype=node.GetNamedArrayDType('com.robotraconteur.testing.TestService3.transform', obj)
     s=np.zeros((m*n,),dtype=n_dtype)
     for i in xrange(m*n):
-        s[i] = ServiceTest2_fill_transform(gen.get_uint32(), obj)
+        s[i] = ServiceTest2_fill_transform(node,gen.get_uint32(), obj)
     
     return s.reshape((m,n), order="F")
     

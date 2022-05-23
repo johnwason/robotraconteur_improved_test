@@ -52,11 +52,31 @@ class testroot_impl(object):
 
 
     def RRServiceObjectInit(self, ctx, service_path):
-        assert False
         self._node = ctx.GetNode()
         self._teststruct1_type = self._node.GetStructureType("com.robotraconteur.testing.TestService1.teststruct1")
         self._teststruct2_type = self._node.GetStructureType("com.robotraconteur.testing.TestService1.teststruct2")
-        self._ostruct2_type = self._node.NewStructure("com.robotraconteur.testing.TestService2.ostruct2")
+        self._ostruct2_type = self._node.GetStructureType("com.robotraconteur.testing.TestService2.ostruct2")
+
+        def timer_func(ev):
+            try:
+                
+                for i in xrange(100):
+                    self._broadcastpipe.AsyncSendPacket(i, lambda: None)
+                    
+            except:
+                pass
+        t = self._node.CreateTimer(.025,timer_func,oneshot=False)
+        t.Start()
+
+        def timer_func2(ev):
+            try:                
+                for i in xrange(100):
+                    self._wirebroadcaster.OutValue=i                    
+            except:
+                pass
+
+        t2 = self._node.CreateTimer(.025,timer_func2,oneshot=False)
+        t2.Start()
 
 
     @property
@@ -783,17 +803,6 @@ class testroot_impl(object):
         assert self._broadcastpipe.MaxBacklog == 3
         self._broadcastpipe.MaxBacklog = 3
         
-        def timer_func(ev):
-            try:
-                
-                for i in xrange(100):
-                    self._broadcastpipe.AsyncSendPacket(i, lambda: None)
-                    
-            except:
-                pass
-
-        t = self._node.CreateTimer(.025,timer_func,oneshot=False)
-        t.Start()
 
     #wires
     @property
@@ -850,17 +859,7 @@ class testroot_impl(object):
         assert self._broadcastwire is None, "Value already set"
         self._broadcastwire=value
 
-        b=RR.WireBroadcaster(value)
-
-        def timer_func(ev):
-            try:                
-                for i in xrange(100):
-                    b.OutValue=i                    
-            except:
-                pass
-
-        t = self._node.CreateTimer(.025,timer_func,oneshot=False)
-        t.Start()
+        self._wirebroadcaster=RR.WireBroadcaster(value)
 
 class sub1_impl(object):
     def __init__(self):

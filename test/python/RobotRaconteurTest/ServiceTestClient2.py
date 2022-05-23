@@ -141,7 +141,7 @@ class ServiceTestClient2:
         if sys.platform == "darwin" and sys.version_info[0] < 3:
             return
 
-        s1 = ServiceTest2_fill_testpod1(563921043,self._r)        
+        s1 = ServiceTest2_fill_testpod1(RRN, 563921043,self._r)        
         ServiceTest2_verify_testpod1(s1[0],563921043)
         
         s1_m = RobotRaconteurPythonUtil.PackMessageElement(s1, 'com.robotraconteur.testing.TestService3.testpod1', self._r)
@@ -159,13 +159,13 @@ class ServiceTestClient2:
         p1 = self._r.testpod1_prop
         ServiceTest2_verify_testpod1(p1[0], 563921043);
         
-        p2=ServiceTest2_fill_testpod1(85932659, self._r)
+        p2=ServiceTest2_fill_testpod1(RRN, 85932659, self._r)
         self._r.testpod1_prop = p2;
         
         f1 = self._r.testpod1_func2()
         ServiceTest2_verify_testpod1(f1[0], 95836295);
         
-        f2=ServiceTest2_fill_testpod1(29546592, self._r)
+        f2=ServiceTest2_fill_testpod1(RRN, 29546592, self._r)
         self._r.testpod1_func1(f2);
         
         #ServiceTest2_verify_teststruct3(self._r.teststruct3_prop, 16483675);
@@ -206,7 +206,7 @@ class ServiceTestClient2:
         pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', self._r)
         o1 = np.zeros((32,), dtype=pod_dtype)
         for i in xrange(32):
-            o1[i] = ServiceTest2_fill_testpod2(59174 + i, self._r)
+            o1[i] = ServiceTest2_fill_testpod2(RRN, 59174 + i, self._r)
         assert self._r.pod_m1.Length == 1024
         self._r.pod_m1.Write(52, o1, 3, 17)
         o2 = np.zeros((32,), dtype=pod_dtype)
@@ -219,7 +219,7 @@ class ServiceTestClient2:
         pod_dtype=RRN.GetPodDType('com.robotraconteur.testing.TestService3.testpod2', self._r)
         s1_1 = np.zeros((9,), dtype=pod_dtype)
         for i in xrange(9):             
-            s1_1[i] = ServiceTest2_fill_testpod2(75721 + i, self._r)
+            s1_1[i] = ServiceTest2_fill_testpod2(RRN, 75721 + i, self._r)
         
         s = s1_1.reshape((3,3), order="F")
         self._r.pod_m2.Write([0,0], s, [0,0], [3,3])
@@ -234,24 +234,24 @@ class ServiceTestClient2:
         
     def TestNamedArrays(self):
         
-        self._r.testnamedarray1 = ServiceTest2_fill_transform(3956378, self._r)['translation']
-        a1_2 = ServiceTest2_fill_transform(74637, self._r);
+        self._r.testnamedarray1 = ServiceTest2_fill_transform(RRN,3956378, self._r)['translation']
+        a1_2 = ServiceTest2_fill_transform(RRN,74637, self._r);
         a1_2['translation'] = self._r.testnamedarray1
         ServiceTest2_verify_transform(a1_2, 74637);
         
-        self._r.testnamedarray2 = ServiceTest2_fill_transform(827635, self._r)
+        self._r.testnamedarray2 = ServiceTest2_fill_transform(RRN,827635, self._r)
         ServiceTest2_verify_transform((self._r.testnamedarray2)[0], 1294)
         
-        self._r.testnamedarray3 = ServiceTest2_create_transform_array(6, 19274, self._r)
+        self._r.testnamedarray3 = ServiceTest2_create_transform_array(RRN, 6, 19274, self._r)
         ServiceTest2_verify_transform_array((self._r.testnamedarray3), 8, 837512)
         
-        self._r.testnamedarray4=(ServiceTest2_create_transform_multidimarray(5, 2, 6385,self._r));
+        self._r.testnamedarray4=(ServiceTest2_create_transform_multidimarray(RRN, 5, 2, 6385,self._r));
         ServiceTest2_verify_transform_multidimarray(self._r.testnamedarray4, 7, 2, 66134);
 
-        self._r.testnamedarray5 = (ServiceTest2_create_transform_multidimarray(3, 2, 7732, self._r));
+        self._r.testnamedarray5 = (ServiceTest2_create_transform_multidimarray(RRN, 3, 2, 7732, self._r));
         ServiceTest2_verify_transform_multidimarray(self._r.testnamedarray5, 3, 2, 773142);
         
-        a1 = ServiceTest2_create_transform_array(6, 174, self._r)
+        a1 = ServiceTest2_create_transform_array(RRN, 6, 174, self._r)
         a2 = RRN.NamedArrayToArray(a1)
         a3 = RRN.ArrayToNamedArray(a2,a1.dtype)
         nptest.assert_equal(a1,a3)
@@ -265,7 +265,7 @@ class ServiceTestClient2:
         
         s = np.zeros((32,),dtype=n_dtype)
         for i in xrange(32):
-            s[i] = ServiceTest2_fill_transform(79174 + i, self._r);
+            s[i] = ServiceTest2_fill_transform(RRN,79174 + i, self._r);
         assert self._r.namedarray_m1.Length == 512
         self._r.namedarray_m1.Write(23,s,3,21)
         
@@ -280,7 +280,7 @@ class ServiceTestClient2:
         
         s = np.zeros((9,),dtype=n_dtype)
         for i in xrange(9):
-            s[i] = ServiceTest2_fill_transform(15721 + i, self._r);
+            s[i] = ServiceTest2_fill_transform(RRN,15721 + i, self._r);
         s=s.reshape((3,3),order="F")
         self._r.namedarray_m2.Write([0,0],s,[0,0],[3,3])
         
