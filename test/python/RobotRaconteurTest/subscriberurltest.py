@@ -3,7 +3,7 @@ import sys
 import time
 
 try: 
-    raw_input
+    raw_input # type: ignore
 except NameError: 
     raw_input = input
 

@@ -19,12 +19,12 @@ from .ServiceTest2 import ServiceTest2_fill_testpod1, ServiceTest2_verify_testpo
 from RobotRaconteur import RobotRaconteurPythonUtil
 
 try: 
-    xrange 
+    xrange # type: ignore
 except NameError: 
     xrange = range
 
 try:
-    cmp
+    cmp # type: ignore
 except NameError:
     cmp = lambda a,b: (a>b) - (a<b)
 

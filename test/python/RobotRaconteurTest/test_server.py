@@ -5,7 +5,7 @@ from .ServiceTest3 import asynctestroot_impl
 import os
 
 try: 
-    raw_input
+    raw_input # type: ignore
 except NameError: 
     raw_input = input
 

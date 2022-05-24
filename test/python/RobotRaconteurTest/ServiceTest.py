@@ -9,7 +9,7 @@ import numpy as np
 import numpy.testing as nptest
 
 try: 
-    xrange 
+    xrange # type: ignore
 except NameError: 
     xrange = range
 

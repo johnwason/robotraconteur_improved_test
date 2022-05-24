@@ -5,12 +5,12 @@ import functools
 import traceback
 
 try: 
-    xrange 
+    xrange # type: ignore
 except NameError: 
     xrange = range
 
 try: 
-    raw_input
+    raw_input # type: ignore
 except NameError: 
     raw_input = input
 
